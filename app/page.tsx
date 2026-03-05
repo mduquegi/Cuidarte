@@ -34,7 +34,7 @@ export default function Home() {
     storage.saveProfile(newProfile);
     setProfile(newProfile);
     setShowWelcome(false);
-    speak(`Bienvenido ${name} a CuidArte`);
+    speak(`Bienvenido ${name} a Cuidarte`);
   };
 
   const goToHome = () => setCurrentPage('home');
@@ -83,7 +83,7 @@ const ProfileSetup: React.FC<{ onComplete: (name: string, age: number) => void }
 
       <div className="bg-blue-50 p-6 rounded-xl mb-8">
         <VoiceButton 
-          text="Bienvenido a CuidArte. Por favor, ingrese su información para comenzar."
+          text="Bienvenido a Cuidarte. Por favor, ingrese su información para comenzar."
           autoPlay={true}
         />
       </div>
@@ -124,7 +124,7 @@ const ProfileSetup: React.FC<{ onComplete: (name: string, age: number) => void }
             onClick={() => {}}
             variant="primary"
             disabled={!name || !age}
-            speakText="Comenzar a usar CuidArte"
+            speakText="Comenzar a usar Cuidarte"
           >
             ▶️ Comenzar
           </Button>
@@ -147,7 +147,7 @@ const HomePage: React.FC<{ onNavigate: (page: Page) => void; profile: UserProfil
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-5xl font-bold text-gray-900 mb-2">
-              💙 CuidArte
+              💙 Cuidarte
             </h1>
             {profile && (
               <p className="text-2xl text-gray-600">
@@ -156,7 +156,7 @@ const HomePage: React.FC<{ onNavigate: (page: Page) => void; profile: UserProfil
             )}
           </div>
           <VoiceButton 
-            text="Menú principal de CuidArte. Seleccione un test para evaluar su salud."
+            text="Menú principal de Cuidarte. Seleccione un test para evaluar su salud."
             autoPlay={false}
           />
         </div>
@@ -166,7 +166,7 @@ const HomePage: React.FC<{ onNavigate: (page: Page) => void; profile: UserProfil
             📋 Acerca de esta aplicación
           </h2>
           <p className="text-lg text-gray-700 leading-relaxed">
-            CuidArte es una herramienta diseñada para ayudar a adultos mayores y cuidadores a 
+            Cuidarte es una herramienta diseñada para ayudar a adultos mayores y cuidadores a 
             realizar seguimiento de la salud mediante tests validados clínicamente. Los resultados 
             se guardan automáticamente para observar la evolución en el tiempo.
           </p>
