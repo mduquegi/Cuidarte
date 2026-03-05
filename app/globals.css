@@ -24,3 +24,56 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Estilos personalizados para integración LiveDoc + Tailwind */
+.bg-holder {
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.bg-size {
+  background-size: contain !important;
+}
+
+/* Mejorar botones de Bootstrap con animaciones */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Iconos con efecto hover */
+.icon-box {
+  transition: transform 0.3s ease;
+}
+
+.icon-box:hover {
+  transform: scale(1.05);
+}
+
+/* Mejorar tarjetas */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para secciones */
+section {
+  position: relative;
+  overflow: hidden;
+}
+

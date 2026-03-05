@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +25,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <link rel="stylesheet" href="/livedoc-theme.css" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        
+        {/* Bootstrap y LiveDoc Scripts */}
+        <Script src="/vendors/@popperjs/popper.min.js" strategy="beforeInteractive" />
+        <Script src="/vendors/bootstrap/bootstrap.min.js" strategy="beforeInteractive" />
+        <Script src="/vendors/is/is.min.js" strategy="lazyOnload" />
+        <Script src="/vendors/fontawesome/all.min.js" strategy="lazyOnload" />
+        <Script src="/assets/js/theme.js" strategy="lazyOnload" />
       </body>
     </html>
   );
