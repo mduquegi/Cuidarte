@@ -171,7 +171,7 @@ const HomePage: React.FC<{ onNavigate: (page: Page) => void; profile: UserProfil
             se guardan automáticamente para observar la evolución en el tiempo.
           </p>
         </div>
-
+            
         {lastTest && (
           <div className="bg-green-50 p-6 rounded-xl mb-8 border-2 border-green-200">
             <h3 className="text-xl font-bold text-green-900 mb-2">
