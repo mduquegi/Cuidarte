@@ -1,52 +1,59 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, VoiceButton } from './components/UI';
 import { FunctionalTest } from './components/FunctionalTest';
 import { CognitiveTest } from './components/CognitiveTest';
 import { MentalTest } from './components/MentalTest';
 import { LifeSpaceTest } from './components/LifeSpaceTest';
 import { Results } from './components/Results';
-import { storage, speak } from './utils';
+import { storage } from './utils';
 import { UserProfile } from './types';
 
-type Page = 'home' | 'functional' | 'cognitive' | 'mental' | 'lifeSpace' | 'results' | 'profile';
+type Page = 'home' | 'functional' | 'cognitive' | 'mental' | 'lifeSpace' | 'results';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
 
   useEffect(() => {
     const savedProfile = storage.getProfile();
     if (savedProfile) {
       setProfile(savedProfile);
-      setShowWelcome(false);
     }
   }, []);
 
-  const createProfile = (name: string, age: number) => {
-    const newProfile: UserProfile = {
-      name,
-      age,
-      createdAt: new Date().toISOString()
-    };
-    storage.saveProfile(newProfile);
-    setProfile(newProfile);
-    setShowWelcome(false);
-    speak(`Bienvenido ${name} a Cuidarte`);
+  const handleSignIn = () => {
+    setShowProfileModal(true);
+  };
+
+  const handleProfileSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name && age) {
+      const newProfile: UserProfile = {
+        name,
+        age: parseInt(age),
+        createdAt: new Date().toISOString()
+      };
+      storage.saveProfile(newProfile);
+      setProfile(newProfile);
+      setShowProfileModal(false);
+      setName('');
+      setAge('');
+    }
+  };
+
+  const handleTestSelect = (test: Page) => {
+    if (!profile) {
+      setShowProfileModal(true);
+      return;
+    }
+    setCurrentPage(test);
   };
 
   const goToHome = () => setCurrentPage('home');
-
-  if (showWelcome) {
-    return (
-      <div className="min-h-screen d-flex align-items-center justify-content-center" 
-           style={{background: 'linear-gradient(to bottom right, #e0f2fe, #f3e8ff, #fce7f3)', padding: '2rem'}}>
-        <ProfileSetup onComplete={createProfile} />
-      </div>
-    );
-  }
 
   // Si estamos en un test, mostrarlo
   if (currentPage !== 'home' && currentPage !== 'results') {
@@ -60,242 +67,277 @@ export default function Home() {
     );
   }
 
-  // Página principal simple
   return (
-    <div className="min-h-screen" style={{background: 'linear-gradient(to bottom right, #e0f2fe, #f3e8ff, #fce7f3)', padding: '2rem'}}>
-      {currentPage === 'home' && <HomePage onNavigate={setCurrentPage} profile={profile} />}
-      {currentPage === 'results' && <Results onBack={goToHome} />}
-    </div>
-  );
-}
-
-const ProfileSetup: React.FC<{ onComplete: (name: string, age: number) => void }> = ({ onComplete }) => {
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (name && age) {
-      onComplete(name, parseInt(age));
-    }
-  };
-
-  return (
-    <Card className="max-w-2xl">
-      <div className="text-center mb-8">
-        <h1 className="text-6xl font-bold text-gray-900 mb-4">
-          💙 CuidArte
-        </h1>
-        <p className="text-2xl text-gray-600">
-          Plataforma de seguimiento de salud para adultos mayores
-        </p>
-      </div>
-
-      <div className="bg-blue-50 p-6 rounded-xl mb-8">
-        <VoiceButton 
-          text="Bienvenido a Cuidarte. Por favor, ingrese su información para comenzar."
-          autoPlay={true}
-        />
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-2xl font-bold text-gray-900 mb-3">
-            ¿Cuál es su nombre?
-          </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-6 py-4 text-2xl border-4 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-            placeholder="Ingrese su nombre"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-2xl font-bold text-gray-900 mb-3">
-            ¿Cuál es su edad?
-          </label>
-          <input
-            type="number"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            min="50"
-            max="120"
-            className="w-full px-6 py-4 text-2xl border-4 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-            placeholder="Ingrese su edad"
-            required
-          />
-        </div>
-
-        <div className="flex justify-center mt-8">
-          <Button
-            onClick={() => {}}
-            variant="primary"
-            disabled={!name || !age}
-            speakText="Comenzar a usar Cuidarte"
-          >
-            ▶️ Comenzar
-          </Button>
-        </div>
-      </form>
-    </Card>
-  );
-};
-
-const HomePage: React.FC<{ onNavigate: (page: Page) => void; profile: UserProfile | null }> = ({ 
-  onNavigate, 
-  profile 
-}) => {
-  const results = storage.getAllResults();
-  const lastTest = results.length > 0 ? results[results.length - 1] : null;
-
-  return (
-    <div className="max-w-6xl mx-auto">
-      <Card>
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h1 className="text-5xl font-bold text-gray-900 mb-2">
-              💙 CuidArte
-            </h1>
-            {profile && (
-              <p className="text-2xl text-gray-600">
-                Bienvenido/a, <strong>{profile.name}</strong>
-              </p>
+    <main className="main" id="top">
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
+        <div className="container">
+          <a className="navbar-brand d-flex align-items-center" href="#top">
+            <span className="fs-3 fw-bold text-primary">💙 CuidArte</span>
+          </a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"> </span>
+          </button>
+          <div className="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+            <ul className="navbar-nav ms-auto pt-2 pt-lg-0 font-base">
+              <li className="nav-item px-2"><a className="nav-link" href="#home">Inicio</a></li>
+              <li className="nav-item px-2"><a className="nav-link" href="#tests">Evaluaciones</a></li>
+              <li className="nav-item px-2"><a className="nav-link" href="#about">Nosotros</a></li>
+              {profile && (
+                <li className="nav-item px-2">
+                  <a className="nav-link" href="#!" onClick={(e) => { e.preventDefault(); setCurrentPage('results'); }}>
+                    Mis Resultados
+                  </a>
+                </li>
+              )}
+            </ul>
+            {profile ? (
+              <span className="btn btn-sm btn-primary rounded-pill order-1 order-lg-0 ms-lg-4">
+                Hola, {profile.name}
+              </span>
+            ) : (
+              <button className="btn btn-sm btn-outline-primary rounded-pill order-1 order-lg-0 ms-lg-4" onClick={handleSignIn}>
+                Ingresar
+              </button>
             )}
           </div>
-          <VoiceButton 
-            text="Menú principal de CuidArte. Seleccione un test para evaluar su salud."
-            autoPlay={false}
-          />
         </div>
+      </nav>
 
-        <div className="bg-linear-to-r from-blue-50 to-purple-50 p-6 rounded-xl mb-8 border-2 border-blue-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
-            📋 Acerca de esta aplicación
-          </h2>
-          <p className="text-lg text-gray-700 leading-relaxed">
-            CuidArte es una herramienta diseñada para ayudar a adultos mayores y cuidadores a 
-            realizar seguimiento de la salud mediante tests validados clínicamente. Los resultados 
-            se guardan automáticamente para observar la evolución en el tiempo.
-          </p>
+      {/* Resultados */}
+      {currentPage === 'results' && profile && (
+        <div style={{marginTop: '100px', padding: '2rem'}}>
+          <Results onBack={goToHome} />
         </div>
+      )}
+
+      {/* Página principal */}
+      {currentPage === 'home' && (
+        <>
+          {/* Hero Section */}
+          <section className="py-xxl-10 pb-0" id="home">
+            <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/hero-bg.png)', backgroundPosition: 'top center', backgroundSize: 'cover'}}></div>
             
-        {lastTest && (
-          <div className="bg-green-50 p-6 rounded-xl mb-8 border-2 border-green-200">
-            <h3 className="text-xl font-bold text-green-900 mb-2">
-              ✅ Último test realizado
-            </h3>
-            <p className="text-lg text-gray-700">
-              {new Date(lastTest.date).toLocaleDateString('es-ES', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </p>
+            <div className="container">
+              <div className="row min-vh-xl-100 min-vh-xxl-25">
+                <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end">
+                  <img className="pt-7 pt-md-0 w-100" src="/assets/img/gallery/hero.png" alt="hero-header" />
+                </div>
+                <div className="col-md-75 col-xl-6 col-xxl-5 text-md-start text-center py-6">
+                  <h1 className="fw-light font-base fs-6 fs-xxl-7">
+                    Hola <strong>{profile?.name || 'Mariana'}</strong>,<br />
+                    <strong>¡Bienvenido de vuelta!</strong>
+                  </h1>
+                  <p className="fs-1 mb-5">
+                    Continúa monitoreando tu salud con nuestras evaluaciones especializadas. 
+                    Cada test te ayuda a mantener tu bienestar.
+                  </p>
+                  <a className="btn btn-lg btn-primary rounded-pill" href="#tests" role="button">
+                    Realizar Evaluaciones
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Tests Section */}
+          <section className="py-5" id="tests">
+            <div className="container">
+              <div className="row">
+                <div className="col-12 py-3">
+                  <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/bg-departments.png)', backgroundPosition: 'top center', backgroundSize: 'contain'}}></div>
+                  <h1 className="text-center">NUESTRAS EVALUACIONES</h1>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="py-0">
+            <div className="container">
+              <div className="row py-5 align-items-center justify-content-center justify-content-lg-evenly">
+                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
+                  <div className="d-flex flex-column align-items-center">
+                    <div className="icon-box text-center">
+                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('functional'); }}>
+                        <div className="mb-3" style={{fontSize: '64px'}}>📊</div>
+                        <p className="fs-1 fs-xxl-2 text-center">Test Funcional</p>
+                        <p className="text-600 small">Equilibrio y movilidad</p>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
+                  <div className="d-flex flex-column align-items-center">
+                    <div className="icon-box text-center">
+                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('cognitive'); }}>
+                        <div className="mb-3" style={{fontSize: '64px'}}>🧠</div>
+                        <p className="fs-1 fs-xxl-2 text-center">Test Cognitivo</p>
+                        <p className="text-600 small">Memoria y atención</p>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
+                  <div className="d-flex flex-column align-items-center">
+                    <div className="icon-box text-center">
+                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('mental'); }}>
+                        <div className="mb-3" style={{fontSize: '64px'}}>💭</div>
+                        <p className="fs-1 fs-xxl-2 text-center">Estado Mental</p>
+                        <p className="text-600 small">Bienestar emocional</p>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
+                  <div className="d-flex flex-column align-items-center">
+                    <div className="icon-box text-center">
+                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('lifeSpace'); }}>
+                        <div className="mb-3" style={{fontSize: '64px'}}>🌍</div>
+                        <p className="fs-1 fs-xxl-2 text-center">Espacio de Vida</p>
+                        <p className="text-600 small">Movilidad y autonomía</p>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* About Section */}
+          <section className="pb-0" id="about">
+            <div className="container">
+              <div className="row">
+                <div className="col-12 py-3">
+                  <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/about-us.png)', backgroundPosition: 'top center', backgroundSize: 'contain'}}></div>
+                  <h1 className="text-center">NOSOTROS</h1>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="py-5">
+            <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/about-bg.png)', backgroundPosition: 'top center', backgroundSize: 'contain'}}></div>
+            
+            <div className="container">
+              <div className="row align-items-center">
+                <div className="col-md-6 order-lg-1 mb-5 mb-lg-0">
+                  <img className="fit-cover rounded-circle w-100" src="/assets/img/gallery/health-care.png" alt="..." />
+                </div>
+                <div className="col-md-6 text-center text-md-start">
+                  <h2 className="fw-bold mb-4">
+                    Sistema de monitoreo de salud<br className="d-none d-sm-block" />
+                    para adultos mayores
+                  </h2>
+                  <p>
+                    CuidArte es una plataforma diseñada para el seguimiento longitudinal<br className="d-none d-sm-block" />
+                    de la salud mediante tests clínicos validados. Permiteobservar la<br className="d-none d-sm-block" />
+                    evolución en el tiempo y compartir resultados con profesionales<br className="d-none d-sm-block" />
+                    de la salud.
+                  </p>
+                  <div className="py-3">
+                    <button className="btn btn-lg btn-outline-primary rounded-pill" type="button" onClick={() => handleTestSelect('functional')}>
+                      Comenzar Evaluación
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <section className="bg-primary py-5">
+            <div className="container">
+              <div className="row">
+                <div className="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0">
+                  <div className="text-decoration-none">
+                    <h2 className="fw-bold text-light mb-3">💙 CuidArte</h2>
+                    <p className="text-light">
+                      Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores 
+                      mediante tests clínicos validados.
+                    </p>
+                  </div>
+                </div>
+                <div className="col-6 col-sm-4 col-lg-2 mb-3 order-2 order-sm-1">
+                  <h5 className="lh-lg fw-bold mb-4 text-light font-sans-serif">Evaluaciones</h5>
+                  <ul className="list-unstyled mb-md-4 mb-lg-0">
+                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Test Funcional</a></li>
+                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Test Cognitivo</a></li>
+                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Estado Mental</a></li>
+                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Espacio de Vida</a></li>
+                  </ul>
+                </div>
+                <div className="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
+                  <h5 className="lh-lg fw-bold text-light mb-4 font-sans-serif">Legal</h5>
+                  <ul className="list-unstyled mb-md-4 mb-lg-0">
+                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Privacidad</a></li>
+                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Términos</a></li>
+                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Cookies</a></li>
+                  </ul>
+                </div>
+                <div className="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
+                  <h5 className="lh-lg fw-bold text-light mb-4 font-sans-serif">Soporte</h5>
+                  <ul className="list-unstyled mb-md-4 mb-lg-0">
+                    <li className="lh-lg"><a className="footer-link text-light" href="#about">Nosotros</a></li>
+                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Contacto</a></li>
+                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Ayuda</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* Modal de Perfil */}
+      {showProfileModal && (
+        <div className="modal show d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Bienvenido a CuidArte</h5>
+                <button type="button" className="btn-close" onClick={() => setShowProfileModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <p className="text-muted mb-4">Por favor, ingresa tus datos para comenzar</p>
+                <form onSubmit={handleProfileSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">¿Cuál es tu nombre?</label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Ingresa tu nombre"
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="form-label fw-bold">¿Cuál es tu edad?</label>
+                    <input
+                      type="number"
+                      className="form-control form-control-lg"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      min="50"
+                      max="120"
+                      placeholder="Ingresa tu edad"
+                      required
+                    />
+                  </div>
+                  <div className="d-grid">
+                    <button type="submit" className="btn btn-primary btn-lg rounded-pill" disabled={!name || !age}>
+                      Comenzar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-        )}
-
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">
-          🧪 Seleccione un Test
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <TestCard
-            icon="📊"
-            title="Capacidad Funcional"
-            description="Evalúa equilibrio y tiempo de reacción"
-            duration="2-3 min"
-            onClick={() => onNavigate('functional')}
-            color="blue"
-          />
-
-          <TestCard
-            icon="🧠"
-            title="Capacidad Cognitiva"
-            description="Prueba de memoria y atención"
-            duration="3-4 min"
-            onClick={() => onNavigate('cognitive')}
-            color="purple"
-          />
-
-          <TestCard
-            icon="💭"
-            title="Estado Mental"
-            description="Evaluación del bienestar emocional"
-            duration="2-3 min"
-            onClick={() => onNavigate('mental')}
-            color="pink"
-          />
-
-          <TestCard
-            icon="🌍"
-            title="Espacio Vital"
-            description="Análisis de movilidad y autonomía"
-            duration="3-4 min"
-            onClick={() => onNavigate('lifeSpace')}
-            color="green"
-          />
         </div>
-
-        <div className="border-t-2 border-gray-200 pt-6">
-          <Button
-            onClick={() => onNavigate('results')}
-            variant="secondary"
-            size="medium"
-            speakText="Ver mis resultados históricos"
-            className="w-full"
-          >
-            📈 Ver Mis Resultados ({results.length} tests realizados)
-          </Button>
-        </div>
-
-        <div className="mt-8 bg-yellow-50 p-6 rounded-xl border-2 border-yellow-200">
-          <h3 className="text-xl font-bold text-yellow-900 mb-3">
-            💡 Consejos de uso
-          </h3>
-          <ul className="space-y-2 text-lg text-gray-700">
-            <li>• Use el botón de voz 🔊 para escuchar las instrucciones</li>
-            <li>• Realice los tests en un ambiente tranquilo</li>
-            <li>• Se recomienda hacer seguimiento mensual</li>
-            <li>• Comparta los resultados con su médico</li>
-            <li>• La sesión completa toma menos de 15 minutos</li>
-          </ul>
-        </div>
-      </Card>
-    </div>
+      )}
+    </main>
   );
-};
-
-const TestCard: React.FC<{
-  icon: string;
-  title: string;
-  description: string;
-  duration: string;
-  onClick: () => void;
-  color: string;
-}> = ({ icon, title, description, duration, onClick, color }) => {
-  const colorClasses = {
-    blue: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
-    purple: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
-    pink: 'from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
-    green: 'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => speak(title)}
-      className={`bg-linear-to-br ${colorClasses[color as keyof typeof colorClasses]} text-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200 text-left`}
-    >
-      <div className="text-6xl mb-4">{icon}</div>
-      <h3 className="text-2xl font-bold mb-2">{title}</h3>
-      <p className="text-lg mb-4 text-white/90">{description}</p>
-      <div className="flex items-center text-sm text-white/80">
-        <span>⏱️ {duration}</span>
-      </div>
-    </button>
-  );
-};
+}

@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <link rel="stylesheet" href="/livedoc-theme.css" />
+        <link rel="stylesheet" href="/assets/css/theme.css" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
