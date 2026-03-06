@@ -16,6 +16,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CuidArte - Seguimiento de Salud para Adultos Mayores",
   description: "Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores mediante tests clínicos validados.",
+  icons: {
+    icon: [
+      { url: '/assets/img/favicons/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/assets/img/favicons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/assets/img/favicons/favicon.ico' },
+    ],
+    apple: [
+      { url: '/assets/img/favicons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export default function RootLayout({

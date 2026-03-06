@@ -1,0 +1,30 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Corazón azul con gradiente -->
+  <defs>
+    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5FC3E4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E88E5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Corazón -->
+  <path d="M60 100 C 20 80, 10 50, 20 35 C 30 20, 45 20, 60 35 C 75 20, 90 20, 100 35 C 110 50, 100 80, 60 100 Z" 
+        fill="url(#heartGradient)" 
+        stroke="none"/>
+  
+  <!-- Figura de persona mayor (cabeza) -->
+  <circle cx="55" cy="40" r="12" fill="white" opacity="0.95"/>
+  
+  <!-- Cuerpo simplificado -->
+  <ellipse cx="55" cy="60" rx="15" ry="18" fill="white" opacity="0.95"/>
+  
+  <!-- Mano cuidadora -->
+  <path d="M 30 55 Q 20 60, 25 70 L 35 75 Q 40 78, 45 75 L 50 70 Q 52 65, 48 60 L 45 55 Q 40 50, 35 52 Z" 
+        fill="#1565C0" 
+        opacity="0.9"/>
+  
+  <!-- Detalles de la mano (dedos) -->
+  <ellipse cx="27" cy="72" rx="3" ry="5" fill="white" opacity="0.3" transform="rotate(-20 27 72)"/>
+  <ellipse cx="32" cy="75" rx="2.5" ry="4" fill="white" opacity="0.3" transform="rotate(-10 32 75)"/>
+  <ellipse cx="37" cy="76" rx="2" ry="3.5" fill="white" opacity="0.3"/>
+</svg>

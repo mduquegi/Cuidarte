@@ -73,7 +73,8 @@ export default function Home() {
       <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="#top">
-            <span className="fs-3 fw-bold text-primary">💙 CuidArte</span>
+            <img src="/assets/img/logo-cuidarte.svg" alt="CuidArte Logo" height="40" className="me-2" />
+            <span className="fs-4 fw-bold text-primary">CuidArte</span>
           </a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"> </span>
@@ -206,59 +207,19 @@ export default function Home() {
             </div>
           </section>
 
-          {/* About Section */}
-          <section className="pb-0" id="about">
-            <div className="container">
-              <div className="row">
-                <div className="col-12 py-3">
-                  <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/about-us.png)', backgroundPosition: 'top center', backgroundSize: 'contain'}}></div>
-                  <h1 className="text-center">NOSOTROS</h1>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="py-5">
-            <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/about-bg.png)', backgroundPosition: 'top center', backgroundSize: 'contain'}}></div>
-            
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-md-6 order-lg-1 mb-5 mb-lg-0">
-                  <img className="fit-cover rounded-circle w-100" src="/assets/img/gallery/health-care.png" alt="..." />
-                </div>
-                <div className="col-md-6 text-center text-md-start">
-                  <h2 className="fw-bold mb-4">
-                    Sistema de monitoreo de salud<br className="d-none d-sm-block" />
-                    para adultos mayores
-                  </h2>
-                  <p>
-                    CuidArte es una plataforma diseñada para el seguimiento longitudinal<br className="d-none d-sm-block" />
-                    de la salud mediante tests clínicos validados. Permiteobservar la<br className="d-none d-sm-block" />
-                    evolución en el tiempo y compartir resultados con profesionales<br className="d-none d-sm-block" />
-                    de la salud.
-                  </p>
-                  <div className="py-3">
-                    <button className="btn btn-lg btn-outline-primary rounded-pill" type="button" onClick={() => handleTestSelect('functional')}>
-                      Comenzar Evaluación
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
 
           {/* Footer */}
           <section className="bg-primary py-5">
             <div className="container">
               <div className="row">
                 <div className="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0">
-                  <div className="text-decoration-none">
-                    <h2 className="fw-bold text-light mb-3">💙 CuidArte</h2>
-                    <p className="text-light">
-                      Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores 
-                      mediante tests clínicos validados.
-                    </p>
+                  <div className="text-decoration-none d-flex align-items-center mb-3">
+                    <img src="/assets/img/logo-cuidarte.svg" alt="CuidArte Logo" height="50" />
                   </div>
+                  <p className="text-light">
+                    Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores 
+                    mediante tests clínicos validados.
+                  </p>
                 </div>
                 <div className="col-6 col-sm-4 col-lg-2 mb-3 order-2 order-sm-1">
                   <h5 className="lh-lg fw-bold mb-4 text-light font-sans-serif">Evaluaciones</h5>
