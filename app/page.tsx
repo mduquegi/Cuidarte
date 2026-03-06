@@ -58,12 +58,12 @@ export default function Home() {
   // Si estamos en un test, mostrarlo
   if (currentPage !== 'home' && currentPage !== 'results') {
     return (
-      <div className="min-h-screen" style={{background: 'linear-gradient(to bottom right, #e0f2fe, #f3e8ff, #fce7f3)', padding: '2rem'}}>
+      <>
         {currentPage === 'functional' && <FunctionalTest onComplete={goToHome} />}
         {currentPage === 'cognitive' && <CognitiveTest onComplete={goToHome} />}
         {currentPage === 'mental' && <MentalTest onComplete={goToHome} />}
         {currentPage === 'lifeSpace' && <LifeSpaceTest onComplete={goToHome} />}
-      </div>
+      </>
     );
   }
 
@@ -125,8 +125,8 @@ export default function Home() {
                 </div>
                 <div className="col-md-75 col-xl-6 col-xxl-5 text-md-start text-center py-6">
                   <h1 className="fw-light font-base fs-6 fs-xxl-7">
-                    Hola <strong>{profile?.name || 'Mariana'}</strong>,<br />
-                    <strong>¡Bienvenido de vuelta!</strong>
+                    Estamos <strong>comprometidos</strong> con<br />
+                    tu <strong>bienestar.</strong>
                   </h1>
                   <p className="fs-1 mb-5">
                     Continúa monitoreando tu salud con nuestras evaluaciones especializadas. 
