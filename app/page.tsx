@@ -73,7 +73,7 @@ export default function Home() {
       <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="#top">
-            <img src="/assets/img/logo-cuidarte.svg" alt="CuidArte Logo" height="40" className="me-2" />
+            <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="40" className="me-2" />
             <span className="fs-4 fw-bold text-primary">CuidArte</span>
           </a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -214,7 +214,7 @@ export default function Home() {
               <div className="row">
                 <div className="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0">
                   <div className="text-decoration-none d-flex align-items-center mb-3">
-                    <img src="/assets/img/logo-cuidarte.svg" alt="CuidArte Logo" height="50" />
+                    <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="50" />
                   </div>
                   <p className="text-light">
                     Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores 
