@@ -10,35 +10,35 @@ const LIFE_SPACES = [
   {
     id: 'bedroom',
     level: 1,
-    title: '🛏️ Habitación',
+    title: 'Habitación',
     description: '¿Ha salido de su habitación?',
     icon: '🛏️'
   },
   {
     id: 'house',
     level: 2,
-    title: '🏠 Otras habitaciones de la casa',
+    title: 'Otras habitaciones de la casa',
     description: '¿Se movió por otras partes de su casa?',
     icon: '🏠'
   },
   {
     id: 'outside',
     level: 3,
-    title: '🚪 Fuera de casa (jardín, patio)',
+    title: 'Fuera de casa (jardín, patio)',
     description: '¿Salió al exterior de su casa?',
     icon: '🌳'
   },
   {
     id: 'neighborhood',
     level: 4,
-    title: '🏘️ Su vecindario',
+    title: 'Su vecindario',
     description: '¿Se desplazó por su vecindario?',
     icon: '🏘️'
   },
   {
     id: 'town',
     level: 5,
-    title: '🏙️ Fuera de su vecindario',
+    title: 'Fuera de su vecindario',
     description: '¿Fue a lugares fuera de su vecindario?',
     icon: '🏙️'
   }
