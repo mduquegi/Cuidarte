@@ -23,6 +23,9 @@ export default function Home() {
     const savedProfile = storage.getProfile();
     if (savedProfile) {
       setProfile(savedProfile);
+    } else {
+      // Mostrar modal si no hay perfil guardado
+      setShowProfileModal(true);
     }
   }, []);
 
@@ -232,38 +235,48 @@ export default function Home() {
 
       {/* Modal de Perfil */}
       {showProfileModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-fade-in">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Bienvenido a CuidArte</h2>
-              <button 
-                onClick={() => setShowProfileModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <X size={24} />
-              </button>
+              <div className="flex items-center gap-3">
+                <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-10 w-auto" />
+                <h2 className="text-2xl font-bold text-primary-600">Bienvenido</h2>
+              </div>
+              {profile && (
+                <button 
+                  onClick={() => setShowProfileModal(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              )}
             </div>
             
-            <p className="text-gray-600 mb-6">Por favor, ingresa tus datos para comenzar</p>
+            <p className="text-gray-600 mb-6">
+              {profile 
+                ? 'Actualiza tus datos si lo deseas' 
+                : 'Para comenzar a usar CuidArte, necesitamos conocerte un poco'}
+            </p>
             
             <form onSubmit={handleProfileSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  ¿Cuál es tu nombre?
+                  ¿Cuál es tu nombre? <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ingresa tu nombre"
+                  placeholder="Ingresa tu nombre completo"
                   required
+                  autoFocus
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  ¿Cuál es tu edad?
+                  ¿Cuál es tu edad? <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -280,9 +293,9 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={!name || !age}
-                className="w-full px-6 py-4 bg-primary-500 text-white font-semibold rounded-full hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                className="w-full px-6 py-4 bg-primary-500 text-white font-semibold rounded-full hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
               >
-                Comenzar
+                {profile ? '💾 Actualizar Perfil' : '🚀 Comenzar mi evaluación'}
               </button>
             </form>
           </div>
