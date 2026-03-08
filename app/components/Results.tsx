@@ -61,8 +61,8 @@ export function Results({ onBack }: ResultsProps) {
     const doc = new jsPDF();
     
     // Colores de CuidArte
-    const primaryColor = [0, 123, 255]; // #007bff
-    const accentColor = [255, 128, 0];  // #ff8000
+    const primaryColor: [number, number, number] = [0, 123, 255]; // #007bff
+    const accentColor: [number, number, number] = [255, 128, 0];  // #ff8000
     
     // Header con logo y título
     doc.setFillColor(...primaryColor);
@@ -167,7 +167,7 @@ export function Results({ onBack }: ResultsProps) {
       }
       
       const percentage = Math.round((result.score / result.maxScore) * 100);
-      const bgColor = index % 2 === 0 ? [245, 247, 250] : [255, 255, 255];
+      const bgColor: [number, number, number] = index % 2 === 0 ? [245, 247, 250] : [255, 255, 255];
       
       doc.setFillColor(...bgColor);
       doc.rect(20, yPosition - 5, 170, 7, 'F');
@@ -429,40 +429,6 @@ export function Results({ onBack }: ResultsProps) {
                     })}
                   </tbody>
                 </table>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-            </div>
-
-            {/* Estadísticas */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h4 className="text-gray-600 font-semibold mb-2">Total de Evaluaciones</h4>
-                <p className="text-4xl font-bold text-primary-600">{filteredResults.length}</p>
-              </div>
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h4 className="text-gray-600 font-semibold mb-2">Promedio General</h4>
-                <p className="text-4xl font-bold text-primary-600">
-                  {filteredResults.length > 0
-                    ? Math.round(
-                        filteredResults.reduce((acc, r) => acc + getScorePercentage(r), 0) /
-                          filteredResults.length
-                      )
-                    : 0}%
-                </p>
-              </div>
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h4 className="text-gray-600 font-semibold mb-2">Última Evaluación</h4>
-                <p className="text-lg font-bold text-primary-600">
-                  {filteredResults.length > 0
-                    ? new Date(filteredResults[filteredResults.length - 1].date).toLocaleDateString('es-MX')
-                    : 'N/A'}
-                </p>
               </div>
             </div>
           </>
