@@ -102,10 +102,10 @@ export default function ChatAssistant() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-primary-500 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50 flex items-center justify-center group"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 bg-primary-500 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50 flex items-center justify-center group"
           aria-label="Abrir asistente virtual"
         >
-          <div className="relative w-10 h-10">
+          <div className="relative w-8 h-8 sm:w-10 sm:h-10">
             <Image
               src="/assets/img/icons/Chatbot.png"
               alt="Asistente Virtual"
@@ -113,7 +113,7 @@ export default function ChatAssistant() {
               className="object-contain"
             />
           </div>
-          <span className="absolute -top-12 right-0 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="absolute -top-12 right-0 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">
             ¿Necesitas ayuda?
           </span>
         </button>
@@ -121,11 +121,11 @@ export default function ChatAssistant() {
 
       {/* Ventana de chat */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-125 bg-white rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-gray-200">
+        <div className="fixed inset-x-2 bottom-2 sm:inset-x-auto sm:bottom-6 sm:right-6 w-auto sm:w-96 max-h-[calc(100vh-1rem)] sm:max-h-150 bg-white rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-gray-200">
           {/* Header */}
-          <div className="bg-primary-500 text-white p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 bg-white rounded-full p-1">
+          <div className="bg-primary-500 text-white p-3 sm:p-4 flex items-center justify-between">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full p-1">
                 <Image
                   src="/assets/img/icons/Chatbot.png"
                   alt="Asistente"
@@ -134,7 +134,7 @@ export default function ChatAssistant() {
                 />
               </div>
               <div>
-                <h3 className="font-semibold">Asistente CuidArte</h3>
+                <h3 className="font-semibold text-sm sm:text-base">Asistente CuidArte</h3>
                 <p className="text-xs opacity-90">Siempre disponible</p>
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function ChatAssistant() {
           </div>
 
           {/* Mensajes */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gray-50">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -190,7 +190,7 @@ export default function ChatAssistant() {
           </div>
 
           {/* Input */}
-          <div className="p-4 bg-white border-t border-gray-200">
+          <div className="p-3 sm:p-4 bg-white border-t border-gray-200">
             <div className="flex gap-2">
               <input
                 type="text"
@@ -199,15 +199,15 @@ export default function ChatAssistant() {
                 onKeyPress={handleKeyPress}
                 placeholder="Escribe tu pregunta..."
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 disabled:bg-gray-100"
+                className="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 disabled:bg-gray-100"
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!inputText.trim() || isLoading}
-                className="bg-primary-500 text-white p-2 rounded-full hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                className="bg-primary-500 text-white p-2 sm:p-2.5 rounded-full hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shrink-0"
                 aria-label="Enviar mensaje"
               >
-                <Send size={20} />
+                <Send size={18} className="sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
