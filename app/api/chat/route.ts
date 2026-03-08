@@ -11,86 +11,62 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Llamada a Hugging Face API
+    // Llamada a Groq API
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct",
+      "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
-          "Authorization": "Bearer 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",
+          "Authorization": "Bearer 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",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          inputs: message,
-          parameters: {
-            max_new_tokens: 200,
-            temperature: 0.7,
-            top_p: 0.9,
-            do_sample: true
-          },
-          options: {
-            wait_for_model: true,
-            use_cache: false
-          }
+          model: "llama-3.1-70b-versatile",
+          messages: [
+            {
+              role: "system",
+              content: "Eres un asistente virtual especializado en cuidado de salud para adultos mayores de la plataforma CuidArte. Responde de manera clara, empática y profesional en español. Tus respuestas deben ser concisas, útiles y enfocadas en el bienestar de personas mayores."
+            },
+            {
+              role: "user",
+              content: message
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 300,
+          top_p: 0.9
         })
       }
     );
 
     if (!response.ok) {
       console.error('Error HTTP:', response.status);
+      const errorData = await response.json();
+      console.error('Error details:', errorData);
       return NextResponse.json({
-        response: "El asistente está ocupado en este momento. Por favor, intenta de nuevo en unos segundos."
+        response: "Lo siento, hubo un problema al procesar tu solicitud. Por favor, intenta de nuevo."
       });
     }
 
     const data = await response.json();
-    console.log('Respuesta de Hugging Face:', data);
+    console.log('Respuesta de Groq:', data);
 
-    // Manejar errores de la API
-    if (data.error) {
-      console.error('Error de Hugging Face:', data.error);
-      
-      // Si el modelo está cargando
-      if (typeof data.error === 'string' && data.error.includes('loading')) {
-        return NextResponse.json({
-          response: "El asistente se está inicializando. Por favor, espera 20 segundos e intenta de nuevo. ⏳"
-        });
-      }
-      
+    // Extraer la respuesta del formato de Groq/OpenAI
+    if (data.choices && data.choices.length > 0 && data.choices[0].message) {
+      const assistantMessage = data.choices[0].message.content;
       return NextResponse.json({
-        response: "El asistente está procesando. Por favor, intenta de nuevo."
+        response: assistantMessage.trim()
       });
     }
-
-    // Extraer la respuesta generada
-    let generatedText = '';
-    
-    if (Array.isArray(data) && data.length > 0) {
-      if (data[0].generated_text) {
-        generatedText = data[0].generated_text;
-      }
-    } else if (data.generated_text) {
-      generatedText = data.generated_text;
-    }
-
-    if (!generatedText) {
-      console.error('No se generó texto:', data);
-      return NextResponse.json({
-        response: "Hola, soy tu asistente de CuidArte. Puedo ayudarte con información sobre salud y bienestar para adultos mayores. ¿En qué puedo asistirte?"
-      });
-    }
-
-    // Limpiar la respuesta (remover el input si viene incluido)
-    const cleanedText = generatedText.replace(message, '').trim();
 
     return NextResponse.json({
-      response: cleanedText || generatedText
+      response: "Lo siento, no pude generar una respuesta. ¿Puedes reformular tu pregunta?"
     });
 
   } catch (error) {
     console.error('Error en API chat:', error);
     return NextResponse.json({
-      response: "Soy tu asistente de CuidArte. Estoy aquí para ayudarte con preguntas sobre salud y bienestar. ¿Qué necesitas saber?"
+      response: "Hola, soy tu asistente de CuidArte. Estoy aquí para ayudarte con preguntas sobre salud y bienestar para adultos mayores. ¿En qué puedo asistirte?"
     });
   }
 }
