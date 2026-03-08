@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import { Button, Card, VoiceButton, ProgressBar } from './UI';
-import { storage } from '../utils';
+import { storage, speak } from '../utils';
 import { TestResult, LifeSpaceResult } from '../types';
+import { ArrowLeft } from 'lucide-react';
 
 const LIFE_SPACES = [
   {
@@ -151,20 +152,31 @@ export const LifeSpaceTest: React.FC<{ onComplete: () => void }> = ({ onComplete
   const autonomyLevel = getAutonomyLevel(totalScore);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-4">
       <Card>
         <div className="flex justify-between items-start mb-6">
-          <h1 className="text-4xl font-bold text-gray-900">
-            🌍 Test de Espacio Vital
-          </h1>
-          <VoiceButton 
-            text={
-              step === 'results'
-                ? "Test completado. Aquí están sus resultados de movilidad."
-                : `Nivel ${progress} de 5: ${currentSpaceData.description}`
-            }
-            autoPlay={step === 'access'}
-          />
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold text-gray-900">
+              🌍 Test de Espacio Vital
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <VoiceButton 
+              text={
+                step === 'results'
+                  ? "Test completado. Aquí están sus resultados de movilidad."
+                  : `Nivel ${progress} de 5: ${currentSpaceData.description}`
+              }
+              autoPlay={step === 'access'}
+            />
+            <button 
+              onClick={onComplete}
+              className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+            >
+              <ArrowLeft size={16} />
+              <span className="hidden sm:inline">Volver</span>
+            </button>
+          </div>
         </div>
 
         {step !== 'results' && (
@@ -195,12 +207,14 @@ export const LifeSpaceTest: React.FC<{ onComplete: () => void }> = ({ onComplete
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
               <button
                 onClick={() => handleAccessAnswer(true)}
+                onMouseEnter={() => speak('Sí', 0.8)}
                 className="p-12 bg-green-500 hover:bg-green-600 text-white rounded-2xl text-4xl font-bold shadow-xl hover:scale-105 transition-all"
               >
                 ✅ SÍ
               </button>
               <button
                 onClick={() => handleAccessAnswer(false)}
+                onMouseEnter={() => speak('No', 0.8)}
                 className="p-12 bg-red-500 hover:bg-red-600 text-white rounded-2xl text-4xl font-bold shadow-xl hover:scale-105 transition-all"
               >
                 ❌ NO

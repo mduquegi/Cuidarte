@@ -6,7 +6,7 @@ import { CognitiveTest } from './components/CognitiveTest';
 import { MentalTest } from './components/MentalTest';
 import { LifeSpaceTest } from './components/LifeSpaceTest';
 import { Results } from './components/Results';
-import { storage } from './utils';
+import { storage, speak } from './utils';
 import { UserProfile } from './types';
 import { X } from 'lucide-react';
 
@@ -77,17 +77,36 @@ export default function Home() {
               <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-10 w-auto" />
               <span className="text-2xl font-bold text-primary-500">CuidArte</span>
             </div>
-            {profile && (
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">Hola, {profile.name}</span>
+            <div className="flex items-center gap-3">
+              {profile ? (
+                <>
+                  <span className="text-sm text-gray-600 hidden sm:block">Hola, <strong>{profile.name}</strong></span>
+                  <button
+                    onClick={() => setCurrentPage('results')}
+                    className="px-4 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-sm"
+                  >
+                    📊 Resultados
+                  </button>
+                  <button
+                    onClick={() => {
+                      setName(profile.name);
+                      setAge(profile.age.toString());
+                      setShowProfileModal(true);
+                    }}
+                    className="px-4 py-2 border border-primary-500 text-primary-500 rounded-full hover:bg-primary-50 transition-colors text-sm"
+                  >
+                    👤 Mi Perfil
+                  </button>
+                </>
+              ) : (
                 <button
-                  onClick={() => setCurrentPage('results')}
-                  className="px-4 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors"
+                  onClick={() => setShowProfileModal(true)}
+                  className="px-4 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-sm"
                 >
-                  Ver Resultados
+                  Iniciar Sesión
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -147,6 +166,7 @@ export default function Home() {
                 {/* Test Funcional */}
                 <button
                   onClick={() => handleTestSelect('functional')}
+                  onMouseEnter={() => speak('Test Funcional: Equilibrio y movilidad', 0.8)}
                   className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
                 >
                   <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">📊</div>
@@ -157,6 +177,7 @@ export default function Home() {
                 {/* Test Cognitivo */}
                 <button
                   onClick={() => handleTestSelect('cognitive')}
+                  onMouseEnter={() => speak('Test Cognitivo: Memoria y atención', 0.8)}
                   className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
                 >
                   <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">🧠</div>
@@ -167,6 +188,7 @@ export default function Home() {
                 {/* Estado Mental */}
                 <button
                   onClick={() => handleTestSelect('mental')}
+                  onMouseEnter={() => speak('Test de Estado Mental: Bienestar emocional', 0.8)}
                   className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
                 >
                   <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">💭</div>
@@ -177,6 +199,7 @@ export default function Home() {
                 {/* Espacio de Vida */}
                 <button
                   onClick={() => handleTestSelect('lifeSpace')}
+                  onMouseEnter={() => speak('Test de Espacio de Vida: Movilidad y autonomía', 0.8)}
                   className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
                 >
                   <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">🌍</div>
@@ -295,7 +318,7 @@ export default function Home() {
                 disabled={!name || !age}
                 className="w-full px-6 py-4 bg-primary-500 text-white font-semibold rounded-full hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
               >
-                {profile ? '💾 Actualizar Perfil' : '🚀 Comenzar mi evaluación'}
+                {profile ? 'Actualizar Perfil' : 'Comenzar mi evaluación'}
               </button>
             </form>
           </div>

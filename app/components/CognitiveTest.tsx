@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Card, VoiceButton, ProgressBar } from './UI';
 import { storage, speak } from '../utils';
 import { TestResult, CognitiveTestResult } from '../types';
+import { ArrowLeft } from 'lucide-react';
 
 const WORD_LISTS = [
   ['CASA', 'GATO', 'ÁRBOL', 'MESA', 'LIBRO', 'FLOR'],
@@ -103,22 +104,33 @@ export const CognitiveTest: React.FC<{ onComplete: () => void }> = ({ onComplete
   const incorrectCount = selectedWords.filter(w => !currentWords.includes(w)).length;
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto p-4">
       <Card>
         <div className="flex justify-between items-start mb-6">
-          <h1 className="text-4xl font-bold text-gray-900">
-            🧠 Test de Capacidad Cognitiva
-          </h1>
-          <VoiceButton 
-            text={
-              step === 0 ? "Test de memoria. Le mostraremos palabras que debe recordar." :
-              step === 1 ? `Palabra número ${wordIndex + 1}: ${currentWords[wordIndex]}` :
-              step === 2 ? "Ahora haremos una pequeña pausa antes de la prueba" :
-              step === 3 ? "Seleccione las palabras que recuerda haber visto" :
-              "Test completado. Aquí están sus resultados."
-            }
-            autoPlay={step === 0}
-          />
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold text-gray-900">
+              🧠 Test de Capacidad Cognitiva
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <VoiceButton 
+              text={
+                step === 0 ? "Test de memoria. Le mostraremos palabras que debe recordar." :
+                step === 1 ? `Palabra número ${wordIndex + 1}: ${currentWords[wordIndex]}` :
+                step === 2 ? "Ahora haremos una pequeña pausa antes de la prueba" :
+                step === 3 ? "Seleccione las palabras que recuerda haber visto" :
+                "Test completado. Aquí están sus resultados."
+              }
+              autoPlay={step === 0}
+            />
+            <button 
+              onClick={onComplete}
+              className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+            >
+              <ArrowLeft size={16} />
+              <span className="hidden sm:inline">Volver</span>
+            </button>
+          </div>
         </div>
 
         <ProgressBar current={step} total={4} />
