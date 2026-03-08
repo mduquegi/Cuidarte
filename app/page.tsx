@@ -17,6 +17,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showTestsModal, setShowTestsModal] = useState(false);
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
 
@@ -49,8 +50,10 @@ export default function Home() {
   const handleTestSelect = (test: Page) => {
     if (!profile) {
       setShowProfileModal(true);
+      setShowTestsModal(false);
       return;
     }
+    setShowTestsModal(false);
     setCurrentPage(test);
   };
 
@@ -138,12 +141,18 @@ export default function Home() {
                     Continúa monitoreando tu salud con nuestras evaluaciones especializadas. 
                     Cada test te ayuda a mantener tu bienestar.
                   </p>
-                  <a 
-                    href="#tests" 
+                  <button 
+                    onClick={() => {
+                      if (!profile) {
+                        setShowProfileModal(true);
+                      } else {
+                        setShowTestsModal(true);
+                      }
+                    }}
                     className="inline-block px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-full hover:bg-primary-600 shadow-soft shadow-soft-hover transition-all"
                   >
                     Realizar Evaluaciones
-                  </a>
+                  </button>
                 </div>
 
                 {/* Logo */}
@@ -154,61 +163,6 @@ export default function Home() {
                     className="w-full max-w-md lg:max-w-lg"
                   />
                 </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Tests Section */}
-          <section className="py-16 px-4 bg-gray-50" id="tests">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-4xl font-bold text-center mb-12 text-primary-700">
-                NUESTRAS EVALUACIONES
-              </h2>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {/* Test Funcional */}
-                <button
-                  onClick={() => handleTestSelect('functional')}
-                  onMouseEnter={() => speak('Test Funcional: Equilibrio y movilidad', 0.8)}
-                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
-                >
-                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">📊</div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800">Test Funcional</h3>
-                  <p className="text-sm text-gray-600">Equilibrio y movilidad</p>
-                </button>
-
-                {/* Test Cognitivo */}
-                <button
-                  onClick={() => handleTestSelect('cognitive')}
-                  onMouseEnter={() => speak('Test Cognitivo: Memoria y atención', 0.8)}
-                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
-                >
-                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">🧠</div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800">Test Cognitivo</h3>
-                  <p className="text-sm text-gray-600">Memoria y atención</p>
-                </button>
-
-                {/* Estado Mental */}
-                <button
-                  onClick={() => handleTestSelect('mental')}
-                  onMouseEnter={() => speak('Test de Estado Mental: Bienestar emocional', 0.8)}
-                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
-                >
-                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">💭</div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800">Estado Mental</h3>
-                  <p className="text-sm text-gray-600">Bienestar emocional</p>
-                </button>
-
-                {/* Espacio de Vida */}
-                <button
-                  onClick={() => handleTestSelect('lifeSpace')}
-                  onMouseEnter={() => speak('Test de Espacio de Vida: Movilidad y autonomía', 0.8)}
-                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
-                >
-                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">🌍</div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800">Espacio de Vida</h3>
-                  <p className="text-sm text-gray-600">Movilidad y autonomía</p>
-                </button>
               </div>
             </div>
           </section>
@@ -233,10 +187,10 @@ export default function Home() {
                 <div>
                   <h5 className="font-bold text-lg mb-4">Evaluaciones</h5>
                   <ul className="space-y-2">
-                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Test Funcional</a></li>
-                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Test Cognitivo</a></li>
-                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Estado Mental</a></li>
-                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Espacio de Vida</a></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Test Funcional</button></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Test Cognitivo</button></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Estado Mental</button></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Espacio de Vida</button></li>
                   </ul>
                 </div>
 
@@ -324,6 +278,94 @@ export default function Home() {
                 {profile ? 'Actualizar Perfil' : 'Comenzar mi evaluación'}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Selección de Tests */}
+      {showTestsModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl max-w-4xl w-full p-8 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-3">
+                <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-10 w-auto" />
+                <h2 className="text-2xl md:text-3xl font-bold text-primary-600">Selecciona una Evaluación</h2>
+              </div>
+              <button 
+                onClick={() => setShowTestsModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <p className="text-gray-600 mb-8 text-center">
+              Elige la evaluación que deseas realizar. Cada test está diseñado para medir diferentes aspectos de tu bienestar.
+            </p>
+            
+            <div className="grid sm:grid-cols-2 gap-6">
+              {/* Test Funcional */}
+              <button
+                onClick={() => handleTestSelect('functional')}
+                onMouseEnter={() => speak('Test Funcional: Equilibrio y movilidad', 0.8)}
+                className="bg-linear-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl text-center transition-all group"
+              >
+                <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">📊</div>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">Test Funcional</h3>
+                <p className="text-gray-600 mb-3">Equilibrio y movilidad</p>
+                <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
+                  ⏱️ Duración: 2-3 minutos
+                </div>
+              </button>
+
+              {/* Test Cognitivo */}
+              <button
+                onClick={() => handleTestSelect('cognitive')}
+                onMouseEnter={() => speak('Test Cognitivo: Memoria y atención', 0.8)}
+                className="bg-linear-to-br from-purple-50 to-purple-100 p-8 rounded-2xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl text-center transition-all group"
+              >
+                <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">🧠</div>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">Test Cognitivo</h3>
+                <p className="text-gray-600 mb-3">Memoria y atención</p>
+                <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
+                  ⏱️ Duración: 3-4 minutos
+                </div>
+              </button>
+
+              {/* Estado Mental */}
+              <button
+                onClick={() => handleTestSelect('mental')}
+                onMouseEnter={() => speak('Test de Estado Mental: Bienestar emocional', 0.8)}
+                className="bg-linear-to-br from-indigo-50 to-indigo-100 p-8 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 hover:shadow-xl text-center transition-all group"
+              >
+                <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">💭</div>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">Estado Mental</h3>
+                <p className="text-gray-600 mb-3">Bienestar emocional</p>
+                <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
+                  ⏱️ Duración: 2 minutos
+                </div>
+              </button>
+
+              {/* Espacio de Vida */}
+              <button
+                onClick={() => handleTestSelect('lifeSpace')}
+                onMouseEnter={() => speak('Test de Espacio de Vida: Movilidad y autonomía', 0.8)}
+                className="bg-linear-to-br from-teal-50 to-teal-100 p-8 rounded-2xl border-2 border-teal-200 hover:border-teal-400 hover:shadow-xl text-center transition-all group"
+              >
+                <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">🌍</div>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">Espacio de Vida</h3>
+                <p className="text-gray-600 mb-3">Movilidad y autonomía</p>
+                <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
+                  ⏱️ Duración: 3-5 minutos
+                </div>
+              </button>
+            </div>
+
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+              <p className="text-sm text-blue-800 text-center">
+                💡 <strong>Consejo:</strong> Realiza los tests en un ambiente tranquilo y sin distracciones para obtener mejores resultados.
+              </p>
+            </div>
           </div>
         </div>
       )}
