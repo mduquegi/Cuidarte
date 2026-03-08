@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log('Mensaje recibido:', message);
+
     // Llamada a Groq API
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "llama-3.1-70b-versatile",
+          model: "llama3-8b-8192",
           messages: [
             {
               role: "system",
@@ -34,22 +36,23 @@ export async function POST(request: NextRequest) {
           ],
           temperature: 0.7,
           max_tokens: 300,
-          top_p: 0.9
+          top_p: 0.95
         })
       }
     );
 
+    console.log('Status de respuesta:', response.status);
+
     if (!response.ok) {
-      console.error('Error HTTP:', response.status);
-      const errorData = await response.json();
-      console.error('Error details:', errorData);
+      const errorText = await response.text();
+      console.error('Error HTTP:', response.status, errorText);
       return NextResponse.json({
         response: "Lo siento, hubo un problema al procesar tu solicitud. Por favor, intenta de nuevo."
       });
     }
 
     const data = await response.json();
-    console.log('Respuesta de Groq:', data);
+    console.log('Respuesta de Groq:', JSON.stringify(data, null, 2));
 
     // Extraer la respuesta del formato de Groq/OpenAI
     if (data.choices && data.choices.length > 0 && data.choices[0].message) {
@@ -70,5 +73,3 @@ export async function POST(request: NextRequest) {
     });
   }
 }
-
-export const runtime = 'edge';
