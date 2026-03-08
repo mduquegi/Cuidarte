@@ -115,11 +115,11 @@ export const CognitiveTest: React.FC<{ onComplete: () => void }> = ({ onComplete
           <div className="flex items-center gap-3">
             <VoiceButton 
               text={
-                step === 0 ? "Test de memoria. Le mostraremos palabras que debe recordar." :
-                step === 1 ? `Palabra número ${wordIndex + 1}: ${currentWords[wordIndex]}` :
-                step === 2 ? "Ahora haremos una pequeña pausa antes de la prueba" :
-                step === 3 ? "Seleccione las palabras que recuerda haber visto" :
-                "Test completado. Aquí están sus resultados."
+                step === 0 ? "Test de capacidad cognitiva. Le mostraremos 6 palabras, una a la vez. Cada palabra aparecerá durante 3 segundos. Después de una breve pausa, debe seleccionar las palabras que recuerde. Presione comenzar test cuando esté listo." :
+                step === 1 ? `Observe y recuerde esta palabra. Palabra número ${wordIndex + 1} de ${currentWords.length}: ${currentWords[wordIndex]}` :
+                step === 2 ? "Ahora haremos una pequeña pausa antes de la prueba. Cuente hacia atrás desde 20 para distraerse." :
+                step === 3 ? "Seleccione las palabras que recuerda haber visto. Ha seleccionado " + selectedWords.length + " palabras. " + correctCount + " correctas y " + incorrectCount + " incorrectas." :
+                "Test completado. Recordó " + correctCount + " de " + currentWords.length + " palabras correctamente."
               }
               autoPlay={step === 0}
             />

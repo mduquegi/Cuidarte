@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { storage } from '../utils';
 import { TestResult, FunctionalTestResult } from '../types';
 import { ArrowLeft } from 'lucide-react';
+import { VoiceButton } from './UI';
 
 export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [step, setStep] = useState(0);
@@ -88,13 +89,25 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800">📊 Test de Capacidad Funcional</h1>
-            <button 
-              onClick={onComplete}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-primary-600 border border-primary-300 rounded-full hover:bg-primary-50 transition-colors font-semibold"
-            >
-              <ArrowLeft size={16} />
-              Volver
-            </button>
+            <div className="flex items-center gap-3">
+              <VoiceButton 
+                text={
+                  step === 0 ? "Test de capacidad funcional. Evaluaremos su equilibrio y tiempo de reacción. Presione comenzar test cuando esté listo." :
+                  step === 1 ? "Test de equilibrio. Mantenga presionado el botón el mayor tiempo posible sin soltarlo. Suelte cuando no pueda mantener más." :
+                  step === 2 && !showReactionButton ? "Test de tiempo de reacción. Espere, el botón verde aparecerá en cualquier momento. Haga clic lo más rápido que pueda cuando aparezca." :
+                  step === 2 && showReactionButton ? "¡Haga clic ahora en el botón verde!" :
+                  "Test completado. Equilibrio: " + (balanceTime / 1000).toFixed(1) + " segundos. Tiempo de reacción: " + reactionTime + " milisegundos."
+                }
+                autoPlay={step === 0}
+              />
+              <button 
+                onClick={onComplete}
+                className="flex items-center gap-2 px-4 py-2 text-sm text-primary-600 border border-primary-300 rounded-full hover:bg-primary-50 transition-colors font-semibold"
+              >
+                <ArrowLeft size={16} />
+                <span className="hidden sm:inline">Volver</span>
+              </button>
+            </div>
           </div>
 
           {/* Progress Bar */}

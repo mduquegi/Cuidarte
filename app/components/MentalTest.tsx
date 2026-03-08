@@ -108,8 +108,8 @@ export const MentalTest: React.FC<{ onComplete: () => void }> = ({ onComplete })
             <VoiceButton 
               text={
                 !isComplete 
-                  ? `Pregunta ${currentQuestion + 1} de 5: ${QUESTIONS[currentQuestion].question}`
-                  : "Test completado. Aquí están sus resultados."
+                  ? `Pregunta ${currentQuestion + 1} de 5. ${QUESTIONS[currentQuestion].question}. Responda con sinceridad según cómo se ha sentido durante la última semana.`
+                  : `Test completado. Estado emocional: ${getRiskLevel().level}. Puntuación: ${totalScore} de 5. ${getRiskLevel().message}`
               }
               autoPlay={true}
             />

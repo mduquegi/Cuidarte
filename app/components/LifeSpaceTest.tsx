@@ -164,8 +164,12 @@ export const LifeSpaceTest: React.FC<{ onComplete: () => void }> = ({ onComplete
             <VoiceButton 
               text={
                 step === 'results'
-                  ? "Test completado. Aquí están sus resultados de movilidad."
-                  : `Nivel ${progress} de 5: ${currentSpaceData.description}`
+                  ? `Test completado. Puntuación de espacio vital: ${totalScore} puntos. Nivel de autonomía: ${autonomyLevel.level}. ${autonomyLevel.message}`
+                  : step === 'access'
+                    ? `Nivel ${progress} de 5. ${currentSpaceData.title}. Durante la última semana, ${currentSpaceData.description}`
+                    : step === 'frequency'
+                      ? `¿Con qué frecuencia fue a ${currentSpaceData.title} durante la última semana?`
+                      : `¿Necesitó ayuda de otra persona o equipo especial para ir a ${currentSpaceData.title}?`
               }
               autoPlay={step === 'access'}
             />
