@@ -11,8 +11,12 @@ export const metadata: Metadata = {
   title: "CuidArte - Seguimiento de Salud para Adultos Mayores",
   description: "Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores mediante tests clínicos validados.",
   icons: {
-    icon: '/assets/img/favicons/favicon.ico',
-    apple: '/assets/img/favicons/apple-touch-icon.png',
+    icon: [
+      { url: '/assets/img/favicons/favicon.png' },
+      { url: '/assets/img/logo-cuidarte.png', sizes: '192x192', type: 'image/png' }
+    ],
+    apple: '/assets/img/logo-cuidarte.png',
+    shortcut: '/assets/img/favicons/favicon.png',
   },
 };
 

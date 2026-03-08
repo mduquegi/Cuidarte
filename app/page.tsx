@@ -6,6 +6,7 @@ import { CognitiveTest } from './components/CognitiveTest';
 import { MentalTest } from './components/MentalTest';
 import { LifeSpaceTest } from './components/LifeSpaceTest';
 import { Results } from './components/Results';
+import ChatAssistant from './components/ChatAssistant';
 import { storage, speak } from './utils';
 import { UserProfile } from './types';
 import { X } from 'lucide-react';
@@ -324,6 +325,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Asistente Virtual */}
+      <ChatAssistant />
     </main>
   );
 }

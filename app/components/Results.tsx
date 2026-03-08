@@ -1,28 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Button, Card, VoiceButton } from './UI';
-import { storage, formatDate } from '../utils';
+import { useState, useEffect } from 'react';
+import { storage } from '../utils';
 import { TestResult } from '../types';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ArrowLeft, Trash2, Download } from 'lucide-react';
 
-const TEST_NAMES = {
-  functional: '📊 Capacidad Funcional',
-  cognitive: '🧠 Capacidad Cognitiva',
-  mental: '💭 Estado Mental',
-  lifeSpace: '🌍 Espacio Vital'
-};
+interface ResultsProps {
+  onBack: () => void;
+}
 
-const TEST_COLORS = {
-  functional: '#3b82f6',
-  cognitive: '#8b5cf6',
-  mental: '#ec4899',
-  lifeSpace: '#10b981'
-};
-
-export const Results: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export function Results({ onBack }: ResultsProps) {
   const [results, setResults] = useState<TestResult[]>([]);
-  const [selectedType, setSelectedType] = useState<string>('all');
+  const [selectedTest, setSelectedTest] = useState<'all' | 'functional' | 'cognitive' | 'mental' | 'lifeSpace'>('all');
 
   useEffect(() => {
     loadResults();
@@ -33,284 +23,262 @@ export const Results: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     setResults(allResults);
   };
 
-  const getFilteredResults = () => {
-    if (selectedType === 'all') return results;
-    return results.filter(r => r.testType === selectedType);
+  const filteredResults = selectedTest === 'all' 
+    ? results 
+    : results.filter(r => r.testType === selectedTest);
+
+  const getTestName = (type: TestResult['testType']) => {
+    const names = {
+      functional: 'Test Funcional',
+      cognitive: 'Test Cognitivo',
+      mental: 'Estado Mental',
+      lifeSpace: 'Espacio de Vida'
+    };
+    return names[type];
   };
 
-  const getChartData = () => {
-    const filtered = getFilteredResults();
-    return filtered.map(r => ({
-      date: formatDate(r.date),
-      fullDate: r.date,
-      score: r.score,
-      percentage: Math.round((r.score / r.maxScore) * 100),
-      type: r.testType
-    }));
+  const getScorePercentage = (result: TestResult) => {
+    return Math.round((result.score / result.maxScore) * 100);
   };
 
-  const getLatestResults = () => {
-    const types = ['functional', 'cognitive', 'mental', 'lifeSpace'] as const;
-    return types.map(type => {
-      const typeResults = results.filter(r => r.testType === type);
-      const latest = typeResults.length > 0 ? typeResults[typeResults.length - 1] : null;
-      return {
-        type,
-        name: TEST_NAMES[type],
-        latest,
-        count: typeResults.length,
-        color: TEST_COLORS[type]
-      };
-    });
-  };
-
-  const getTotalTests = () => results.length;
-
-  const getAverageScore = () => {
-    if (results.length === 0) return 0;
-    const avg = results.reduce((sum, r) => sum + (r.score / r.maxScore) * 100, 0) / results.length;
-    return Math.round(avg);
+  const getScoreColor = (percentage: number) => {
+    if (percentage >= 80) return 'text-green-600';
+    if (percentage >= 60) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   const clearAllData = () => {
-    if (confirm('¿Está seguro de que desea borrar todos los resultados? Esta acción no se puede deshacer.')) {
+    if (confirm('¿Estás seguro de que deseas eliminar todos los resultados? Esta acción no se puede deshacer.')) {
       storage.clearAll();
       setResults([]);
+      alert('Todos los datos han sido eliminados.');
     }
   };
 
-  const latestResults = getLatestResults();
-  const chartData = getChartData();
+  const exportData = () => {
+    const dataStr = JSON.stringify(results, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `cuidarte-resultados-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+  };
+
+  // Preparar datos para gráfico de progreso
+  const chartData = filteredResults.map((result, index) => ({
+    name: `Test ${index + 1}`,
+    fecha: new Date(result.date).toLocaleDateString('es-MX'),
+    porcentaje: getScorePercentage(result),
+    puntuacion: result.score
+  }));
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <Card>
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              📈 Mis Resultados
-            </h1>
-            <p className="text-xl text-gray-600">
-              Seguimiento longitudinal de su salud
-            </p>
+    <div className="min-h-screen bg-linear-to-br from-primary-50 to-white py-12 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onBack}
+              className="p-3 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow"
+              aria-label="Volver"
+            >
+              <ArrowLeft className="text-primary-600" size={24} />
+            </button>
+            <div>
+              <h1 className="text-4xl font-bold text-primary-600">Mis Resultados</h1>
+              <p className="text-gray-600 mt-2">Historial de evaluaciones y progreso</p>
+            </div>
           </div>
-          <VoiceButton 
-            text="Panel de resultados. Aquí puede ver el historial de todos sus tests."
-            autoPlay={false}
-          />
+          
+          <div className="flex gap-3">
+            <button
+              onClick={exportData}
+              disabled={results.length === 0}
+              className="flex items-center gap-2 px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              <Download size={20} />
+              Exportar
+            </button>
+            <button
+              onClick={clearAllData}
+              disabled={results.length === 0}
+              className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              <Trash2 size={20} />
+              Limpiar Datos
+            </button>
+          </div>
         </div>
 
-        {results.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-8xl mb-6">📊</div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              No hay resultados todavía
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Complete algunos tests para ver su progreso aquí
-            </p>
-            <Button onClick={onBack} variant="primary" speakText="Volver al menú">
-              🏠 Volver al Menú
-            </Button>
+        {/* Filtros */}
+        <div className="mb-6 flex gap-3 flex-wrap">
+          <button
+            onClick={() => setSelectedTest('all')}
+            className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+              selectedTest === 'all'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Todos ({results.length})
+          </button>
+          <button
+            onClick={() => setSelectedTest('functional')}
+            className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+              selectedTest === 'functional'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Funcional ({results.filter(r => r.testType === 'functional').length})
+          </button>
+          <button
+            onClick={() => setSelectedTest('cognitive')}
+            className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+              selectedTest === 'cognitive'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Cognitivo ({results.filter(r => r.testType === 'cognitive').length})
+          </button>
+          <button
+            onClick={() => setSelectedTest('mental')}
+            className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+              selectedTest === 'mental'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Mental ({results.filter(r => r.testType === 'mental').length})
+          </button>
+          <button
+            onClick={() => setSelectedTest('lifeSpace')}
+            className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+              selectedTest === 'lifeSpace'
+                ? 'bg-primary-500 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            Espacio de Vida ({results.filter(r => r.testType === 'lifeSpace').length})
+          </button>
+        </div>
+
+        {/* Contenido */}
+        {filteredResults.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+            <div className="text-6xl mb-4">📊</div>
+            <h3 className="text-2xl font-bold text-gray-700 mb-2">No hay resultados aún</h3>
+            <p className="text-gray-500">Completa algunas evaluaciones para ver tu progreso aquí</p>
           </div>
         ) : (
-          <div className="space-y-8">
-            {/* Resumen General */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-linear-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-200">
-                <h3 className="text-lg font-bold text-blue-900 mb-2">Total de Tests</h3>
-                <p className="text-5xl font-bold text-blue-600">{getTotalTests()}</p>
+          <>
+            {/* Gráfico de progreso */}
+            {chartData.length >= 2 && (
+              <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Progreso en el Tiempo</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="fecha" />
+                    <YAxis domain={[0, 100]} />
+                    <Tooltip />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="porcentaje" 
+                      stroke="#007bff" 
+                      strokeWidth={3}
+                      name="Porcentaje (%)"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
+            )}
 
-              <div className="bg-linear-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-200">
-                <h3 className="text-lg font-bold text-green-900 mb-2">Promedio General</h3>
-                <p className="text-5xl font-bold text-green-600">{getAverageScore()}%</p>
+            {/* Tabla de resultados */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-primary-500 text-white">
+                    <tr>
+                      <th className="px-6 py-4 text-left font-semibold">Fecha</th>
+                      <th className="px-6 py-4 text-left font-semibold">Test</th>
+                      <th className="px-6 py-4 text-left font-semibold">Puntuación</th>
+                      <th className="px-6 py-4 text-left font-semibold">Porcentaje</th>
+                      <th className="px-6 py-4 text-left font-semibold">Detalles</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredResults.map((result) => {
+                      const percentage = getScorePercentage(result);
+                      return (
+                        <tr key={result.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4 text-gray-900">
+                            {new Date(result.date).toLocaleDateString('es-MX', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </td>
+                          <td className="px-6 py-4 text-gray-900 font-medium">
+                            {getTestName(result.testType)}
+                          </td>
+                          <td className="px-6 py-4 text-gray-900">
+                            {result.score} / {result.maxScore}
+                          </td>
+                          <td className={`px-6 py-4 font-bold ${getScoreColor(percentage)}`}>
+                            {percentage}%
+                          </td>
+                          <td className="px-6 py-4">
+                            <button
+                              className="text-primary-500 hover:text-primary-700 font-medium"
+                              onClick={() => alert(JSON.stringify(result.details, null, 2))}
+                            >
+                              Ver más
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
+            </div>
 
-              <div className="bg-linear-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-200">
-                <h3 className="text-lg font-bold text-purple-900 mb-2">Tipos de Tests</h3>
-                <p className="text-5xl font-bold text-purple-600">
-                  {latestResults.filter(r => r.count > 0).length}
+            {/* Estadísticas */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h4 className="text-gray-600 font-semibold mb-2">Total de Evaluaciones</h4>
+                <p className="text-4xl font-bold text-primary-600">{filteredResults.length}</p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h4 className="text-gray-600 font-semibold mb-2">Promedio General</h4>
+                <p className="text-4xl font-bold text-primary-600">
+                  {filteredResults.length > 0
+                    ? Math.round(
+                        filteredResults.reduce((acc, r) => acc + getScorePercentage(r), 0) /
+                          filteredResults.length
+                      )
+                    : 0}%
+                </p>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h4 className="text-gray-600 font-semibold mb-2">Última Evaluación</h4>
+                <p className="text-lg font-bold text-primary-600">
+                  {filteredResults.length > 0
+                    ? new Date(filteredResults[filteredResults.length - 1].date).toLocaleDateString('es-MX')
+                    : 'N/A'}
                 </p>
               </div>
             </div>
-
-            {/* Últimos Resultados por Tipo */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📋 Últimos Resultados por Categoría
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {latestResults.map(({ type, name, latest, count, color }) => (
-                  <div
-                    key={type}
-                    className="bg-white p-6 rounded-xl border-2 border-gray-200 hover:shadow-lg transition-shadow"
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold" style={{ color }}>
-                        {name}
-                      </h3>
-                      <span className="bg-gray-100 px-3 py-1 rounded-full text-sm font-bold text-gray-700">
-                        {count} test{count !== 1 ? 's' : ''}
-                      </span>
-                    </div>
-                    {latest ? (
-                      <>
-                        <div className="mb-2">
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-4xl font-bold" style={{ color }}>
-                              {Math.round((latest.score / latest.maxScore) * 100)}%
-                            </span>
-                            <span className="text-lg text-gray-600">
-                              ({latest.score}/{latest.maxScore})
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-500">
-                          📅 {formatDate(latest.date)}
-                        </p>
-                      </>
-                    ) : (
-                      <p className="text-gray-400 italic">Sin resultados aún</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Filtros */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📊 Gráfica de Evolución
-              </h2>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <button
-                  onClick={() => setSelectedType('all')}
-                  className={`px-6 py-3 rounded-lg font-bold text-lg transition-all ${
-                    selectedType === 'all'
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  📊 Todos
-                </button>
-                {Object.entries(TEST_NAMES).map(([type, name]) => (
-                  <button
-                    key={type}
-                    onClick={() => setSelectedType(type)}
-                    className={`px-6 py-3 rounded-lg font-bold text-lg transition-all ${
-                      selectedType === type
-                        ? 'text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                    style={
-                      selectedType === type
-                        ? { backgroundColor: TEST_COLORS[type as keyof typeof TEST_COLORS] }
-                        : {}
-                    }
-                  >
-                    {name}
-                  </button>
-                ))}
-              </div>
-
-              {/* Gráfico */}
-              <div className="bg-white p-6 rounded-xl border-2 border-gray-200">
-                {chartData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={400}>
-                    <LineChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis domain={[0, 100]} label={{ value: 'Porcentaje (%)', angle: -90, position: 'insideLeft' }} />
-                      <Tooltip 
-                        formatter={(value: any) => [`${value}%`, 'Puntuación']}
-                        labelFormatter={(label) => `Fecha: ${label}`}
-                      />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="percentage"
-                        stroke={selectedType === 'all' ? '#3b82f6' : TEST_COLORS[selectedType as keyof typeof TEST_COLORS]}
-                        strokeWidth={3}
-                        dot={{ r: 6 }}
-                        activeDot={{ r: 8 }}
-                        name="Puntuación"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="text-center py-12 text-gray-400">
-                    No hay datos para mostrar en el gráfico
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Historial Detallado */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                📜 Historial Completo
-              </h2>
-              <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden">
-                <div className="max-h-96 overflow-y-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-100 sticky top-0">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-lg font-bold text-gray-900">Fecha</th>
-                        <th className="px-6 py-3 text-left text-lg font-bold text-gray-900">Test</th>
-                        <th className="px-6 py-3 text-left text-lg font-bold text-gray-900">Puntuación</th>
-                        <th className="px-6 py-3 text-left text-lg font-bold text-gray-900">Resultado</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[...results].reverse().map((result, index) => {
-                        const percentage = Math.round((result.score / result.maxScore) * 100);
-                        return (
-                          <tr key={result.id} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                            <td className="px-6 py-4 text-lg text-gray-900">{formatDate(result.date)}</td>
-                            <td className="px-6 py-4 text-lg font-medium text-gray-900">
-                              {TEST_NAMES[result.testType]}
-                            </td>
-                            <td className="px-6 py-4 text-lg text-gray-900">
-                              {result.score}/{result.maxScore}
-                            </td>
-                            <td className="px-6 py-4">
-                              <span
-                                className={`px-4 py-2 rounded-full font-bold text-lg ${
-                                  percentage >= 80
-                                    ? 'bg-green-100 text-green-800'
-                                    : percentage >= 60
-                                    ? 'bg-blue-100 text-blue-800'
-                                    : percentage >= 40
-                                    ? 'bg-yellow-100 text-yellow-800'
-                                    : 'bg-red-100 text-red-800'
-                                }`}
-                              >
-                                {percentage}%
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            {/* Acciones */}
-            <div className="flex flex-wrap gap-4 justify-between items-center pt-6 border-t-2">
-              <Button onClick={onBack} variant="primary" speakText="Volver al menú">
-                🏠 Volver al Menú
-              </Button>
-              
-              <Button onClick={clearAllData} variant="danger" speakText="Borrar todos los datos">
-                🗑️ Borrar Todos los Datos
-              </Button>
-            </div>
-          </div>
+          </>
         )}
-      </Card>
+      </div>
     </div>
   );
-};
+}
