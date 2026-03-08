@@ -13,21 +13,43 @@ interface Message {
 
 async function preguntarIA(pregunta: string): Promise<string> {
   try {
-    const response = await fetch("https://api.puter.com/v2/chat", {
+    const response = await fetch("https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1", {
       method: "POST",
       headers: {
+        "Authorization": "Bearer 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",
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        prompt: pregunta
+        inputs: `<s>[INST] Eres un asistente virtual especializado en cuidado de salud para adultos mayores de la plataforma CuidArte. Responde de manera clara, empática y profesional en español. Pregunta del usuario: ${pregunta} [/INST]`,
+        parameters: {
+          max_new_tokens: 250,
+          temperature: 0.7,
+          top_p: 0.95,
+          return_full_text: false
+        }
       })
     });
 
     const data = await response.json();
-    return data.response || "Lo siento, no pude procesar tu pregunta.";
+    
+    // Manejar diferentes formatos de respuesta de Hugging Face
+    if (data.error) {
+      console.error('Error de API:', data.error);
+      return "El asistente está cargando. Por favor, intenta de nuevo en unos segundos.";
+    }
+    
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      return data[0].generated_text.trim();
+    }
+    
+    if (data.generated_text) {
+      return data.generated_text.trim();
+    }
+    
+    return "Lo siento, no pude procesar tu pregunta en este momento.";
   } catch (error) {
     console.error('Error al consultar IA:', error);
-    return "Lo siento, hubo un error al conectar con el asistente. Por favor, intenta de nuevo.";
+    return "Lo siento, hubo un error al conectar con el asistente. Por favor, verifica tu conexión e intenta de nuevo.";
   }
 }
 
