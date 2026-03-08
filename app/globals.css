@@ -77,3 +77,30 @@ section {
   overflow: hidden;
 }
 
+/* Navbar compacta */
+.navbar {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.navbar-brand {
+  font-size: 1.1rem !important;
+}
+
+/* Ajustes para elementos de hero */
+.hero-image-container img {
+  max-width: 85%;
+  height: auto;
+}
+
+/* Icono de cuidado más pequeño en móvil */
+@media (max-width: 768px) {
+  .fit-cover.rounded-circle {
+    max-width: 80% !important;
+  }
+  
+  .hero-image-container img {
+    max-width: 100%;
+  }
+}
+

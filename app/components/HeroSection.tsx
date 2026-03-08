@@ -10,7 +10,7 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ profile, onStartTests }) => {
   return (
-    <section className="py-xxl-10 pb-0" id="home" style={{ marginTop: '80px' }}>
+    <section className="py-xxl-10 pb-0" id="home" style={{ marginTop: '60px' }}>
       <div 
         className="bg-holder bg-size" 
         style={{
@@ -24,7 +24,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile, onStartTests 
         <div className="row min-vh-xl-100 min-vh-xxl-25">
           <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end">
             <img 
-              className="pt-7 pt-md-0 w-100" 
+              className="pt-4 pt-md-0" 
+              style={{maxWidth: '85%', height: 'auto'}}
               src="/assets/img/gallery/hero.png" 
               alt="Cuidado de salud" 
             />

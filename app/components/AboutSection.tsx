@@ -35,11 +35,12 @@ export const AboutSection: React.FC = () => {
 
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-md-6 order-lg-1 mb-5 mb-lg-0">
+            <div className="col-md-6 order-lg-1 mb-5 mb-lg-0 d-flex justify-content-center">
               <img 
-                className="fit-cover rounded-circle w-100" 
+                className="fit-cover rounded-circle" 
                 src="/assets/img/gallery/health-care.png" 
-                alt="Cuidado de la salud" 
+                alt="Cuidado de la salud"
+                style={{maxWidth: '70%', height: 'auto'}}
               />
             </div>
             <div className="col-md-6 text-center text-md-start">

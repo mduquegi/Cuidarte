@@ -70,11 +70,11 @@ export default function Home() {
   return (
     <main className="main" id="top">
       {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
+      <nav className="navbar navbar-expand-lg navbar-light fixed-top py-1 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="#top">
-            <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="40" className="me-2" />
-            <span className="fs-4 fw-bold text-primary">CuidArte</span>
+            <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="28" className="me-2" />
+            <span className="fs-5 fw-bold text-primary">CuidArte</span>
           </a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"> </span>
@@ -107,7 +107,7 @@ export default function Home() {
 
       {/* Resultados */}
       {currentPage === 'results' && profile && (
-        <div style={{marginTop: '100px', padding: '2rem'}}>
+        <div style={{marginTop: '60px', padding: '2rem'}}>
           <Results onBack={goToHome} />
         </div>
       )}
@@ -116,13 +116,13 @@ export default function Home() {
       {currentPage === 'home' && (
         <>
           {/* Hero Section */}
-          <section className="py-xxl-10 pb-0" id="home">
+          <section className="py-xxl-10 pb-0" id="home" style={{marginTop: '60px'}}>
             <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/hero-bg.png)', backgroundPosition: 'top center', backgroundSize: 'cover'}}></div>
             
             <div className="container">
               <div className="row min-vh-xl-100 min-vh-xxl-25">
                 <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end">
-                  <img className="pt-7 pt-md-0 w-100" src="/assets/img/gallery/hero.png" alt="hero-header" />
+                  <img className="pt-4 pt-md-0" style={{maxWidth: '85%', height: 'auto'}} src="/assets/img/gallery/hero.png" alt="hero-header" />
                 </div>
                 <div className="col-md-75 col-xl-6 col-xxl-5 text-md-start text-center py-6">
                   <h1 className="fw-light font-base fs-6 fs-xxl-7">
