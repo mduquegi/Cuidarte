@@ -288,7 +288,7 @@ export default function Home() {
                 </label>
                 <input
                   type="text"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-gray-900"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ingresa tu nombre completo"
@@ -303,7 +303,7 @@ export default function Home() {
                 </label>
                 <input
                   type="number"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-gray-900"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                   min="50"

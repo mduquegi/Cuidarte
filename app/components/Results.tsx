@@ -267,11 +267,11 @@ export const Results: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                         const percentage = Math.round((result.score / result.maxScore) * 100);
                         return (
                           <tr key={result.id} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                            <td className="px-6 py-4 text-lg">{formatDate(result.date)}</td>
-                            <td className="px-6 py-4 text-lg font-medium">
+                            <td className="px-6 py-4 text-lg text-gray-900">{formatDate(result.date)}</td>
+                            <td className="px-6 py-4 text-lg font-medium text-gray-900">
                               {TEST_NAMES[result.testType]}
                             </td>
-                            <td className="px-6 py-4 text-lg">
+                            <td className="px-6 py-4 text-lg text-gray-900">
                               {result.score}/{result.maxScore}
                             </td>
                             <td className="px-6 py-4">
