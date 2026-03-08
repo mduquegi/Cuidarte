@@ -72,21 +72,22 @@ export default function Home() {
     <main className="min-h-screen bg-background">
       {/* Navbar */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-10 w-auto" />
-              <span className="text-2xl font-bold text-primary-500">CuidArte</span>
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-14 sm:h-16">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-8 sm:h-10 w-auto" />
+              <span className="text-xl sm:text-2xl font-bold text-primary-500">CuidArte</span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {profile ? (
                 <>
-                  <span className="text-sm text-gray-600 hidden sm:block">Hola, <strong>{profile.name}</strong></span>
+                  <span className="text-sm text-gray-600 hidden md:block">Hola, <strong>{profile.name}</strong></span>
                   <button
                     onClick={() => setCurrentPage('results')}
-                    className="px-4 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-sm"
+                    className="px-2 py-1.5 sm:px-4 sm:py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-xs sm:text-sm font-medium"
                   >
-                    📊 Resultados
+                    <span className="hidden sm:inline">📊 Resultados</span>
+                    <span className="sm:hidden">📊</span>
                   </button>
                   <button
                     onClick={() => {
@@ -94,15 +95,16 @@ export default function Home() {
                       setAge(profile.age.toString());
                       setShowProfileModal(true);
                     }}
-                    className="px-4 py-2 border border-primary-500 text-primary-500 rounded-full hover:bg-primary-50 transition-colors text-sm"
+                    className="px-2 py-1.5 sm:px-4 sm:py-2 border border-primary-500 text-primary-500 rounded-full hover:bg-primary-50 transition-colors text-xs sm:text-sm font-medium"
                   >
-                    👤 Mi Perfil
+                    <span className="hidden sm:inline">👤 Mi Perfil</span>
+                    <span className="sm:hidden">👤</span>
                   </button>
                 </>
               ) : (
                 <button
                   onClick={() => setShowProfileModal(true)}
-                  className="px-4 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-sm"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
                 >
                   Iniciar Sesión
                 </button>
