@@ -69,6 +69,13 @@ export default function Home() {
 
   return (
     <main className="main" id="top">
+      {/* Navbar Simple */}
+      <nav className="navbar navbar-light bg-white shadow-sm py-3">
+        <div className="container">
+          <span className="navbar-brand mb-0 h1 fw-bold text-primary" style={{fontSize: '1.5rem'}}>CuidArte</span>
+        </div>
+      </nav>
+
       {/* Resultados */}
       {currentPage === 'results' && profile && (
         <div style={{padding: '2rem'}}>
@@ -86,7 +93,7 @@ export default function Home() {
             <div className="container">
               <div className="row min-vh-xl-100 min-vh-xxl-25">
                 <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end d-flex align-items-center justify-content-center">
-                  <img className="pt-4 pt-md-0" src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" style={{maxWidth: '300px', width: '100%'}} />
+                  <img className="pt-4 pt-md-0" src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" style={{maxWidth: '600px', width: '100%'}} />
                 </div>
                 <div className="col-md-7 col-xl-6 col-xxl-5 text-md-start text-center py-6">
                   <h1 className="fw-light font-base fs-6 fs-xxl-7">
@@ -177,9 +184,6 @@ export default function Home() {
             <div className="container">
               <div className="row">
                 <div className="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0">
-                  <div className="text-decoration-none d-flex align-items-center mb-3">
-                    <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="50" />
-                  </div>
                   <p className="text-light">
                     Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores 
                     mediante tests clínicos validados.
