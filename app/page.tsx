@@ -69,45 +69,9 @@ export default function Home() {
 
   return (
     <main className="main" id="top">
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top py-1 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
-        <div className="container">
-          <a className="navbar-brand d-flex align-items-center" href="#top">
-            <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="24" className="me-2" />
-            <span className="fs-6 fw-bold text-primary">CuidArte</span>
-          </a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"> </span>
-          </button>
-          <div className="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
-            <ul className="navbar-nav ms-auto pt-2 pt-lg-0 font-base">
-              <li className="nav-item px-2"><a className="nav-link" href="#home">Inicio</a></li>
-              <li className="nav-item px-2"><a className="nav-link" href="#tests">Evaluaciones</a></li>
-              <li className="nav-item px-2"><a className="nav-link" href="#about">Nosotros</a></li>
-              {profile && (
-                <li className="nav-item px-2">
-                  <a className="nav-link" href="#!" onClick={(e) => { e.preventDefault(); setCurrentPage('results'); }}>
-                    Mis Resultados
-                  </a>
-                </li>
-              )}
-            </ul>
-            {profile ? (
-              <span className="btn btn-sm btn-primary rounded-pill order-1 order-lg-0 ms-lg-4">
-                Hola, {profile.name}
-              </span>
-            ) : (
-              <button className="btn btn-sm btn-outline-primary rounded-pill order-1 order-lg-0 ms-lg-4" onClick={handleSignIn}>
-                Ingresar
-              </button>
-            )}
-          </div>
-        </div>
-      </nav>
-
       {/* Resultados */}
       {currentPage === 'results' && profile && (
-        <div style={{marginTop: '60px', padding: '2rem'}}>
+        <div style={{padding: '2rem'}}>
           <Results onBack={goToHome} />
         </div>
       )}
@@ -116,13 +80,13 @@ export default function Home() {
       {currentPage === 'home' && (
         <>
           {/* Hero Section */}
-          <section className="py-xxl-10 pb-0" id="home" style={{marginTop: '60px'}}>
+          <section className="py-xxl-10 pb-0" id="home" style={{marginTop: '20px'}}>
             <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/hero-bg.png)', backgroundPosition: 'top center', backgroundSize: 'cover'}}></div>
             
             <div className="container">
               <div className="row min-vh-xl-100 min-vh-xxl-25">
-                <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end">
-                  <img className="pt-4 pt-md-0 hero-image" src="/assets/img/gallery/hero.png" alt="hero-header" />
+                <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end d-flex align-items-center justify-content-center">
+                  <img className="pt-4 pt-md-0" src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" style={{maxWidth: '300px', width: '100%'}} />
                 </div>
                 <div className="col-md-7 col-xl-6 col-xxl-5 text-md-start text-center py-6">
                   <h1 className="fw-light font-base fs-6 fs-xxl-7">
