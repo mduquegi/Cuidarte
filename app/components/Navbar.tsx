@@ -13,7 +13,7 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, onNavigate }) => {
     <nav className="navbar navbar-expand-lg navbar-light fixed-top py-1 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
       <div className="container">
         <a className="navbar-brand d-flex align-items-center" href="#home">
-          <span className="fs-5 fw-bold text-primary">💙 CuidArte</span>
+          <span className="fs-6 fw-bold text-primary">💙 CuidArte</span>
         </a>
         <button 
           className="navbar-toggler" 

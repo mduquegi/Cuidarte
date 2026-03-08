@@ -84,23 +84,49 @@ section {
 }
 
 .navbar-brand {
-  font-size: 1.1rem !important;
+  font-size: 1rem !important;
 }
 
-/* Ajustes para elementos de hero */
-.hero-image-container img {
-  max-width: 85%;
+/* Imagen del hero - responsive y más pequeña */
+.hero-image {
+  width: 75%;
+  max-width: 400px;
   height: auto;
+  display: inline-block;
 }
 
-/* Icono de cuidado más pequeño en móvil */
+/* Icono de salud - más pequeño */
+.health-icon {
+  width: 60%;
+  max-width: 300px;
+  height: auto;
+  display: inline-block;
+}
+
+/* Responsive ajustes */
 @media (max-width: 768px) {
-  .fit-cover.rounded-circle {
-    max-width: 80% !important;
+  .hero-image {
+    width: 90%;
+    max-width: 100%;
   }
   
-  .hero-image-container img {
-    max-width: 100%;
+  .health-icon {
+    width: 70%;
+    max-width: 250px;
+  }
+  
+  .navbar-brand {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-image {
+    width: 80%;
+  }
+  
+  .health-icon {
+    width: 65%;
   }
 }
 

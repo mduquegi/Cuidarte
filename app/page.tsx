@@ -73,8 +73,8 @@ export default function Home() {
       <nav className="navbar navbar-expand-lg navbar-light fixed-top py-1 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="#top">
-            <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="28" className="me-2" />
-            <span className="fs-5 fw-bold text-primary">CuidArte</span>
+            <img src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" height="24" className="me-2" />
+            <span className="fs-6 fw-bold text-primary">CuidArte</span>
           </a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"> </span>
@@ -122,9 +122,9 @@ export default function Home() {
             <div className="container">
               <div className="row min-vh-xl-100 min-vh-xxl-25">
                 <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end">
-                  <img className="pt-4 pt-md-0" style={{maxWidth: '85%', height: 'auto'}} src="/assets/img/gallery/hero.png" alt="hero-header" />
+                  <img className="pt-4 pt-md-0 hero-image" src="/assets/img/gallery/hero.png" alt="hero-header" />
                 </div>
-                <div className="col-md-75 col-xl-6 col-xxl-5 text-md-start text-center py-6">
+                <div className="col-md-7 col-xl-6 col-xxl-5 text-md-start text-center py-6">
                   <h1 className="fw-light font-base fs-6 fs-xxl-7">
                     Estamos <strong>comprometidos</strong> con<br />
                     tu <strong>bienestar.</strong>
