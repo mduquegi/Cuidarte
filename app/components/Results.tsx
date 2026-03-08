@@ -116,22 +116,35 @@ export function Results({ onBack }: ResultsProps) {
     };
     
     const testNames = {
-      functional: '📊 Test Funcional',
-      cognitive: '🧠 Test Cognitivo',
-      mental: '💭 Estado Mental',
-      lifeSpace: '🌍 Espacio Vital'
+      functional: 'Test Funcional',
+      cognitive: 'Test Cognitivo',
+      mental: 'Estado Mental',
+      lifeSpace: 'Espacio Vital'
     };
     
     doc.setTextColor(60, 60, 60);
     doc.setFontSize(11);
     
+    const testColors: { [key: string]: [number, number, number] } = {
+      functional: [0, 123, 255],   // Azul
+      cognitive: [147, 51, 234],   // Morado
+      mental: [99, 102, 241],      // Índigo
+      lifeSpace: [20, 184, 166]    // Teal
+    };
+    
     Object.entries(testsGrouped).forEach(([type, tests]) => {
       if (tests.length > 0) {
         const testName = testNames[type as keyof typeof testNames];
         const avgScore = tests.reduce((sum, t) => sum + (t.score / t.maxScore) * 100, 0) / tests.length;
+        const color = testColors[type];
+        
+        // Viñeta de color (cuadrado pequeño)
+        doc.setFillColor(...color);
+        doc.rect(20, yPosition - 3, 3, 3, 'F');
         
         doc.setFont('helvetica', 'bold');
-        doc.text(testName, 20, yPosition);
+        doc.setTextColor(60, 60, 60);
+        doc.text(testName, 26, yPosition);
         doc.setFont('helvetica', 'normal');
         doc.text(`Realizados: ${tests.length}`, 110, yPosition);
         doc.text(`Promedio: ${avgScore.toFixed(0)}%`, 160, yPosition);
