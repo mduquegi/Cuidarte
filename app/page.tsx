@@ -8,6 +8,7 @@ import { LifeSpaceTest } from './components/LifeSpaceTest';
 import { Results } from './components/Results';
 import { storage } from './utils';
 import { UserProfile } from './types';
+import { X } from 'lucide-react';
 
 type Page = 'home' | 'functional' | 'cognitive' | 'mental' | 'lifeSpace' | 'results';
 
@@ -24,10 +25,6 @@ export default function Home() {
       setProfile(savedProfile);
     }
   }, []);
-
-  const handleSignIn = () => {
-    setShowProfileModal(true);
-  };
 
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,17 +65,33 @@ export default function Home() {
   }
 
   return (
-    <main className="main" id="top">
-      {/* Navbar Simple */}
-      <nav className="navbar navbar-light bg-white shadow-sm py-3">
-        <div className="container">
-          <span className="navbar-brand mb-0 h1 fw-bold text-primary" style={{fontSize: '1.5rem'}}>CuidArte</span>
+    <main className="min-h-screen bg-background">
+      {/* Navbar */}
+      <nav className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-3">
+              <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-10 w-auto" />
+              <span className="text-2xl font-bold text-primary-500">CuidArte</span>
+            </div>
+            {profile && (
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-600">Hola, {profile.name}</span>
+                <button
+                  onClick={() => setCurrentPage('results')}
+                  className="px-4 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors"
+                >
+                  Ver Resultados
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
       {/* Resultados */}
       {currentPage === 'results' && profile && (
-        <div style={{padding: '2rem'}}>
+        <div className="p-8">
           <Results onBack={goToHome} />
         </div>
       )}
@@ -87,183 +100,191 @@ export default function Home() {
       {currentPage === 'home' && (
         <>
           {/* Hero Section */}
-          <section className="py-xxl-10 pb-0" id="home" style={{marginTop: '20px'}}>
-            <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/hero-bg.png)', backgroundPosition: 'top center', backgroundSize: 'cover'}}></div>
-            
-            <div className="container">
-              <div className="row min-vh-xl-100 min-vh-xxl-25">
-                <div className="col-md-5 col-xl-6 col-xxl-7 order-0 order-md-1 text-end d-flex align-items-center justify-content-center">
-                  <img className="pt-4 pt-md-0" src="/assets/img/logo-cuidarte.png" alt="CuidArte Logo" style={{maxWidth: '600px', width: '100%'}} />
-                </div>
-                <div className="col-md-7 col-xl-6 col-xxl-5 text-md-start text-center py-6">
-                  <h1 className="fw-light font-base fs-6 fs-xxl-7">
-                    Estamos <strong>comprometidos</strong> con<br />
-                    tu <strong>bienestar.</strong>
+          <section className="py-16 px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                {/* Texto */}
+                <div className="text-center md:text-left animate-fade-in">
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
+                    Estamos <strong className="font-bold text-gradient">comprometidos</strong> con<br />
+                    tu <strong className="font-bold text-gradient">bienestar.</strong>
                   </h1>
-                  <p className="fs-1 mb-5">
+                  <p className="text-lg md:text-xl text-gray-600 mb-8">
                     Continúa monitoreando tu salud con nuestras evaluaciones especializadas. 
                     Cada test te ayuda a mantener tu bienestar.
                   </p>
-                  <a className="btn btn-lg btn-primary rounded-pill" href="#tests" role="button">
+                  <a 
+                    href="#tests" 
+                    className="inline-block px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-full hover:bg-primary-600 shadow-soft shadow-soft-hover transition-all"
+                  >
                     Realizar Evaluaciones
                   </a>
+                </div>
+
+                {/* Logo */}
+                <div className="flex justify-center md:justify-end animate-fade-in">
+                  <img 
+                    src="/assets/img/logo-cuidarte.png" 
+                    alt="CuidArte Logo" 
+                    className="w-full max-w-md lg:max-w-lg"
+                  />
                 </div>
               </div>
             </div>
           </section>
 
           {/* Tests Section */}
-          <section className="py-5" id="tests">
-            <div className="container">
-              <div className="row">
-                <div className="col-12 py-3">
-                  <div className="bg-holder bg-size" style={{backgroundImage: 'url(/assets/img/gallery/bg-departments.png)', backgroundPosition: 'top center', backgroundSize: 'contain'}}></div>
-                  <h1 className="text-center">NUESTRAS EVALUACIONES</h1>
-                </div>
+          <section className="py-16 px-4 bg-gray-50" id="tests">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-4xl font-bold text-center mb-12 text-primary-700">
+                NUESTRAS EVALUACIONES
+              </h2>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {/* Test Funcional */}
+                <button
+                  onClick={() => handleTestSelect('functional')}
+                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
+                >
+                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">📊</div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-800">Test Funcional</h3>
+                  <p className="text-sm text-gray-600">Equilibrio y movilidad</p>
+                </button>
+
+                {/* Test Cognitivo */}
+                <button
+                  onClick={() => handleTestSelect('cognitive')}
+                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
+                >
+                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">🧠</div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-800">Test Cognitivo</h3>
+                  <p className="text-sm text-gray-600">Memoria y atención</p>
+                </button>
+
+                {/* Estado Mental */}
+                <button
+                  onClick={() => handleTestSelect('mental')}
+                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
+                >
+                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">💭</div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-800">Estado Mental</h3>
+                  <p className="text-sm text-gray-600">Bienestar emocional</p>
+                </button>
+
+                {/* Espacio de Vida */}
+                <button
+                  onClick={() => handleTestSelect('lifeSpace')}
+                  className="bg-white p-8 rounded-2xl shadow-soft shadow-soft-hover text-center transition-all group"
+                >
+                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">🌍</div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-800">Espacio de Vida</h3>
+                  <p className="text-sm text-gray-600">Movilidad y autonomía</p>
+                </button>
               </div>
             </div>
           </section>
-
-          <section className="py-0">
-            <div className="container">
-              <div className="row py-5 align-items-center justify-content-center justify-content-lg-evenly">
-                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
-                  <div className="d-flex flex-column align-items-center">
-                    <div className="icon-box text-center">
-                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('functional'); }}>
-                        <div className="mb-3" style={{fontSize: '64px'}}>📊</div>
-                        <p className="fs-1 fs-xxl-2 text-center">Test Funcional</p>
-                        <p className="text-600 small">Equilibrio y movilidad</p>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
-                  <div className="d-flex flex-column align-items-center">
-                    <div className="icon-box text-center">
-                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('cognitive'); }}>
-                        <div className="mb-3" style={{fontSize: '64px'}}>🧠</div>
-                        <p className="fs-1 fs-xxl-2 text-center">Test Cognitivo</p>
-                        <p className="text-600 small">Memoria y atención</p>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
-                  <div className="d-flex flex-column align-items-center">
-                    <div className="icon-box text-center">
-                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('mental'); }}>
-                        <div className="mb-3" style={{fontSize: '64px'}}>💭</div>
-                        <p className="fs-1 fs-xxl-2 text-center">Estado Mental</p>
-                        <p className="text-600 small">Bienestar emocional</p>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-auto col-md-4 col-lg-auto text-xl-start">
-                  <div className="d-flex flex-column align-items-center">
-                    <div className="icon-box text-center">
-                      <a className="text-decoration-none" href="#!" onClick={(e) => { e.preventDefault(); handleTestSelect('lifeSpace'); }}>
-                        <div className="mb-3" style={{fontSize: '64px'}}>🌍</div>
-                        <p className="fs-1 fs-xxl-2 text-center">Espacio de Vida</p>
-                        <p className="text-600 small">Movilidad y autonomía</p>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
 
           {/* Footer */}
-          <section className="bg-primary py-5">
-            <div className="container">
-              <div className="row">
-                <div className="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0">
-                  <p className="text-light">
+          <footer className="bg-primary-500 text-white py-12 px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid md:grid-cols-4 gap-8">
+                {/* Descripción */}
+                <div className="md:col-span-2">
+                  <div className="flex items-center gap-3 mb-4">
+                    <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-12 w-auto brightness-0 invert" />
+                    <span className="text-2xl font-bold">CuidArte</span>
+                  </div>
+                  <p className="text-primary-100">
                     Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores 
                     mediante tests clínicos validados.
                   </p>
                 </div>
-                <div className="col-6 col-sm-4 col-lg-2 mb-3 order-2 order-sm-1">
-                  <h5 className="lh-lg fw-bold mb-4 text-light font-sans-serif">Evaluaciones</h5>
-                  <ul className="list-unstyled mb-md-4 mb-lg-0">
-                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Test Funcional</a></li>
-                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Test Cognitivo</a></li>
-                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Estado Mental</a></li>
-                    <li className="lh-lg"><a className="footer-link text-light" href="#tests">Espacio de Vida</a></li>
+
+                {/* Evaluaciones */}
+                <div>
+                  <h5 className="font-bold text-lg mb-4">Evaluaciones</h5>
+                  <ul className="space-y-2">
+                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Test Funcional</a></li>
+                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Test Cognitivo</a></li>
+                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Estado Mental</a></li>
+                    <li><a href="#tests" className="text-primary-100 hover:text-white transition-colors">Espacio de Vida</a></li>
                   </ul>
                 </div>
-                <div className="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
-                  <h5 className="lh-lg fw-bold text-light mb-4 font-sans-serif">Legal</h5>
-                  <ul className="list-unstyled mb-md-4 mb-lg-0">
-                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Privacidad</a></li>
-                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Términos</a></li>
-                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Cookies</a></li>
-                  </ul>
-                </div>
-                <div className="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
-                  <h5 className="lh-lg fw-bold text-light mb-4 font-sans-serif">Soporte</h5>
-                  <ul className="list-unstyled mb-md-4 mb-lg-0">
-                    <li className="lh-lg"><a className="footer-link text-light" href="#about">Nosotros</a></li>
-                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Contacto</a></li>
-                    <li className="lh-lg"><a className="footer-link text-light" href="#!">Ayuda</a></li>
+
+                {/* Legal */}
+                <div>
+                  <h5 className="font-bold text-lg mb-4">Legal</h5>
+                  <ul className="space-y-2">
+                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">Privacidad</a></li>
+                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">Términos</a></li>
+                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">Cookies</a></li>
                   </ul>
                 </div>
               </div>
+
+              <div className="mt-8 pt-8 border-t border-primary-400 text-center text-primary-100">
+                <p>&copy; {new Date().getFullYear()} CuidArte. Todos los derechos reservados.</p>
+              </div>
             </div>
-          </section>
+          </footer>
         </>
       )}
 
       {/* Modal de Perfil */}
       {showProfileModal && (
-        <div className="modal show d-block" style={{backgroundColor: 'rgba(0,0,0,0.5)'}}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Bienvenido a CuidArte</h5>
-                <button type="button" className="btn-close" onClick={() => setShowProfileModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                <p className="text-muted mb-4">Por favor, ingresa tus datos para comenzar</p>
-                <form onSubmit={handleProfileSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label fw-bold">¿Cuál es tu nombre?</label>
-                    <input
-                      type="text"
-                      className="form-control form-control-lg"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Ingresa tu nombre"
-                      required
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="form-label fw-bold">¿Cuál es tu edad?</label>
-                    <input
-                      type="number"
-                      className="form-control form-control-lg"
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
-                      min="50"
-                      max="120"
-                      placeholder="Ingresa tu edad"
-                      required
-                    />
-                  </div>
-                  <div className="d-grid">
-                    <button type="submit" className="btn btn-primary btn-lg rounded-pill" disabled={!name || !age}>
-                      Comenzar
-                    </button>
-                  </div>
-                </form>
-              </div>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl animate-fade-in">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Bienvenido a CuidArte</h2>
+              <button 
+                onClick={() => setShowProfileModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={24} />
+              </button>
             </div>
+            
+            <p className="text-gray-600 mb-6">Por favor, ingresa tus datos para comenzar</p>
+            
+            <form onSubmit={handleProfileSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  ¿Cuál es tu nombre?
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ingresa tu nombre"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  ¿Cuál es tu edad?
+                </label>
+                <input
+                  type="number"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  min="50"
+                  max="120"
+                  placeholder="Ingresa tu edad"
+                  required
+                />
+              </div>
+              
+              <button
+                type="submit"
+                disabled={!name || !age}
+                className="w-full px-6 py-4 bg-primary-500 text-white font-semibold rounded-full hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              >
+                Comenzar
+              </button>
+            </form>
           </div>
         </div>
       )}

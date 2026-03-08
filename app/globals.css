@@ -1,132 +1,88 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Paleta de colores basada en el logo CuidArte */
+@theme {
+  /* Colores primarios - Azul del logo */
+  --color-primary-50: #e6f2ff;
+  --color-primary-100: #cce5ff;
+  --color-primary-200: #99cbff;
+  --color-primary-300: #66b0ff;
+  --color-primary-400: #3396ff;
+  --color-primary-500: #007bff;  /* Color principal del logo */
+  --color-primary-600: #0062cc;
+  --color-primary-700: #004a99;
+  --color-primary-800: #003166;
+  --color-primary-900: #001933;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Colores de acento - Cálidos y acogedores */
+  --color-accent-50: #fff5e6;
+  --color-accent-100: #ffe6cc;
+  --color-accent-200: #ffcc99;
+  --color-accent-300: #ffb366;
+  --color-accent-400: #ff9933;
+  --color-accent-500: #ff8000;
+  --color-accent-600: #cc6600;
+  --color-accent-700: #994d00;
+  --color-accent-800: #663300;
+  --color-accent-900: #331a00;
+
+  /* Modo claro/oscuro */
+  --color-background: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-muted: #f5f5f5;
+  --color-border: #e5e5e5;
+  
+  /* Fuente */
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @theme {
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+    --color-muted: #1a1a1a;
+    --color-border: #2a2a2a;
   }
 }
 
+/* Estilos base */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
 }
 
-/* Estilos personalizados para integración LiveDoc + Tailwind */
-.bg-holder {
-  position: absolute;
-  width: 100%;
-  min-height: 100%;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
+/* Animaciones suaves */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.bg-size {
-  background-size: contain !important;
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
 }
 
-/* Mejorar botones de Bootstrap con animaciones */
-.btn {
-  transition: all 0.3s ease;
+/* Utilidades personalizadas */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.btn:hover {
+.shadow-soft {
+  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
+}
+
+.shadow-soft-hover:hover {
+  box-shadow: 0 8px 30px rgba(0, 123, 255, 0.15);
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Iconos con efecto hover */
-.icon-box {
-  transition: transform 0.3s ease;
-}
-
-.icon-box:hover {
-  transform: scale(1.05);
-}
-
-/* Mejorar tarjetas */
-.card {
   transition: all 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-}
-
-/* Estilos para secciones */
-section {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Navbar compacta */
-.navbar {
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
-}
-
-.navbar-brand {
-  font-size: 1rem !important;
-}
-
-/* Imagen del hero - responsive y más pequeña */
-.hero-image {
-  width: 75%;
-  max-width: 400px;
-  height: auto;
-  display: inline-block;
-}
-
-/* Icono de salud - más pequeño */
-.health-icon {
-  width: 60%;
-  max-width: 300px;
-  height: auto;
-  display: inline-block;
-}
-
-/* Responsive ajustes */
-@media (max-width: 768px) {
-  .hero-image {
-    width: 90%;
-    max-width: 100%;
-  }
-  
-  .health-icon {
-    width: 70%;
-    max-width: 250px;
-  }
-  
-  .navbar-brand {
-    font-size: 0.9rem !important;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .hero-image {
-    width: 80%;
-  }
-  
-  .health-icon {
-    width: 65%;
-  }
 }
 

@@ -26,7 +26,7 @@ export const Button: React.FC<ButtonProps> = ({
   const baseClasses = 'font-bold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variantClasses = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+    primary: 'bg-primary-500 hover:bg-primary-600 text-white',
     secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900',
     success: 'bg-green-600 hover:bg-green-700 text-white',
     danger: 'bg-red-600 hover:bg-red-700 text-white'
@@ -100,7 +100,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({ text, autoPlay = false
   return (
     <button
       onClick={handleSpeak}
-      className="p-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-all hover:scale-110"
+      className="p-4 bg-accent-500 hover:bg-accent-600 text-white rounded-full shadow-lg transition-all hover:scale-110"
       title={isSpeaking ? "Detener lectura" : "Leer en voz alta"}
     >
       {isSpeaking ? <VolumeX size={32} /> : <Volume2 size={32} />}
@@ -119,7 +119,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
   return (
     <div className="w-full bg-gray-200 rounded-full h-6 mb-6">
       <div
-        className="bg-blue-600 h-6 rounded-full transition-all duration-500 flex items-center justify-center"
+        className="bg-primary-500 h-6 rounded-full transition-all duration-500 flex items-center justify-center"
         style={{ width: `${percentage}%` }}
       >
         <span className="text-white font-bold text-sm px-2">
