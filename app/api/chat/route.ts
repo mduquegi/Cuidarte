@@ -11,8 +11,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Llamada a Hugging Face API
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1",
+      "https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct",
       {
         method: "POST",
         headers: {
@@ -20,61 +21,78 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          inputs: `<s>[INST] Eres un asistente virtual especializado en cuidado de salud para adultos mayores de la plataforma CuidArte. Responde de manera clara, empática y profesional en español. Pregunta del usuario: ${message} [/INST]`,
+          inputs: message,
           parameters: {
-            max_new_tokens: 250,
+            max_new_tokens: 200,
             temperature: 0.7,
-            top_p: 0.95,
-            return_full_text: false
+            top_p: 0.9,
+            do_sample: true
+          },
+          options: {
+            wait_for_model: true,
+            use_cache: false
           }
         })
       }
     );
 
+    if (!response.ok) {
+      console.error('Error HTTP:', response.status);
+      return NextResponse.json({
+        response: "El asistente está ocupado en este momento. Por favor, intenta de nuevo en unos segundos."
+      });
+    }
+
     const data = await response.json();
+    console.log('Respuesta de Hugging Face:', data);
 
     // Manejar errores de la API
     if (data.error) {
       console.error('Error de Hugging Face:', data.error);
       
       // Si el modelo está cargando
-      if (data.error.includes('loading')) {
+      if (typeof data.error === 'string' && data.error.includes('loading')) {
         return NextResponse.json({
-          response: "El asistente se está inicializando. Por favor, intenta de nuevo en unos segundos. ⏳"
+          response: "El asistente se está inicializando. Por favor, espera 20 segundos e intenta de nuevo. ⏳"
         });
       }
       
       return NextResponse.json({
-        response: "Lo siento, hubo un problema temporal. Por favor, intenta de nuevo."
+        response: "El asistente está procesando. Por favor, intenta de nuevo."
       });
     }
 
     // Extraer la respuesta generada
     let generatedText = '';
     
-    if (Array.isArray(data) && data[0]?.generated_text) {
-      generatedText = data[0].generated_text;
+    if (Array.isArray(data) && data.length > 0) {
+      if (data[0].generated_text) {
+        generatedText = data[0].generated_text;
+      }
     } else if (data.generated_text) {
       generatedText = data.generated_text;
     }
 
     if (!generatedText) {
+      console.error('No se generó texto:', data);
       return NextResponse.json({
-        response: "Lo siento, no pude generar una respuesta. ¿Puedes intentar reformular tu pregunta?"
+        response: "Hola, soy tu asistente de CuidArte. Puedo ayudarte con información sobre salud y bienestar para adultos mayores. ¿En qué puedo asistirte?"
       });
     }
 
+    // Limpiar la respuesta (remover el input si viene incluido)
+    const cleanedText = generatedText.replace(message, '').trim();
+
     return NextResponse.json({
-      response: generatedText.trim()
+      response: cleanedText || generatedText
     });
 
   } catch (error) {
     console.error('Error en API chat:', error);
-    return NextResponse.json(
-      {
-        response: "Lo siento, hubo un error al procesar tu solicitud. Por favor, intenta de nuevo más tarde."
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      response: "Soy tu asistente de CuidArte. Estoy aquí para ayudarte con preguntas sobre salud y bienestar. ¿Qué necesitas saber?"
+    });
   }
 }
+
+export const runtime = 'edge';
