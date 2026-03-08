@@ -10,10 +10,12 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ profile, onNavigate }) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light fixed-top py-1 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
+    <nav className="navbar navbar-expand-lg navbar-light fixed-top py-0" data-navbar-on-scroll="data-navbar-on-scroll">
       <div className="container">
-        <a className="navbar-brand d-flex align-items-center" href="#home">
-          <span className="fs-6 fw-bold text-primary">💙 CuidArte</span>
+        <a className="navbar-brand d-flex align-items-center py-2" href="#home">
+          <span style={{ fontSize: '1rem' }} className="fw-bold text-primary d-flex align-items-center gap-1">
+            <span style={{ fontSize: '1.2rem' }}>💙</span> CuidArte
+          </span>
         </a>
         <button 
           className="navbar-toggler" 
@@ -26,26 +28,26 @@ export const Navbar: React.FC<NavbarProps> = ({ profile, onNavigate }) => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
-          <ul className="navbar-nav ms-auto pt-2 pt-lg-0 font-base">
+        <div className="collapse navbar-collapse border-top border-lg-0 mt-2 mt-lg-0" id="navbarSupportedContent">
+          <ul className="navbar-nav ms-auto pt-1 pt-lg-0" style={{ fontSize: '0.9rem' }}>
             <li className="nav-item px-2">
-              <a className="nav-link" href="#home">Inicio</a>
+              <a className="nav-link py-1" href="#home">Inicio</a>
             </li>
             <li className="nav-item px-2">
-              <a className="nav-link" href="#tests">Evaluaciones</a>
+              <a className="nav-link py-1" href="#tests">Evaluaciones</a>
             </li>
             <li className="nav-item px-2">
-              <a className="nav-link" href="#about">Acerca de</a>
+              <a className="nav-link py-1" href="#about">Acerca de</a>
             </li>
             {profile && (
               <li className="nav-item px-2">
-                <a className="nav-link" href="#results">Mis Resultados</a>
+                <a className="nav-link py-1" href="#results">Mis Resultados</a>
               </li>
             )}
           </ul>
           {profile && (
-            <span className="btn btn-sm btn-outline-primary rounded-pill order-1 order-lg-0 ms-lg-4">
-              👤 {profile.name}
+            <span className="btn btn-sm btn-outline-primary rounded-pill order-1 order-lg-0 ms-lg-3 py-1 px-3" style={{ fontSize: '0.85rem' }}>
+              <span style={{ fontSize: '0.9rem' }}>👤</span> {profile.name}
             </span>
           )}
         </div>
