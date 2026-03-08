@@ -171,7 +171,7 @@ export const LifeSpaceTest: React.FC<{ onComplete: () => void }> = ({ onComplete
             />
             <button 
               onClick={onComplete}
-              className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-300 rounded-full hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-primary-600 border border-primary-300 rounded-full hover:bg-primary-50 transition-colors font-semibold"
             >
               <ArrowLeft size={16} />
               <span className="hidden sm:inline">Volver</span>
