@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "./LanguageContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -8,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CuidArte - Seguimiento de Salud para Adultos Mayores",
-  description: "Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores mediante tests clínicos validados.",
+  title: "CuidArte - Health Monitoring for Older Adults | Seguimiento de Salud para Adultos Mayores",
+  description: "Assessment and longitudinal monitoring platform for elderly health through validated clinical tests. | Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores mediante tests clínicos validados.",
   icons: {
     icon: [
       { url: '/assets/img/favicons/favicon.png' },
@@ -28,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.variable} antialiased`}>
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

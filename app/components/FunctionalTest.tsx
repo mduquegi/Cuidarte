@@ -5,8 +5,10 @@ import { storage } from '../utils';
 import { TestResult, FunctionalTestResult } from '../types';
 import { ArrowLeft } from 'lucide-react';
 import { VoiceButton } from './UI';
+import { useLanguage } from '../LanguageContext';
 
 export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [balanceTime, setBalanceTime] = useState(0);
   const [balanceStartTime, setBalanceStartTime] = useState<number | null>(null);
@@ -88,15 +90,15 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
         <div className="bg-white rounded-2xl shadow-soft p-6 md:p-8">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">📊 Test de Capacidad Funcional</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">📊 {t.functionalTest.title}</h1>
             <div className="flex items-center gap-3">
               <VoiceButton 
                 text={
-                  step === 0 ? "Test de capacidad funcional. Evaluaremos su equilibrio y tiempo de reacción. Presione comenzar test cuando esté listo." :
-                  step === 1 ? "Test de equilibrio. Mantenga presionado el botón el mayor tiempo posible sin soltarlo. Suelte cuando no pueda mantener más." :
-                  step === 2 && !showReactionButton ? "Test de tiempo de reacción. Espere, el botón verde aparecerá en cualquier momento. Haga clic lo más rápido que pueda cuando aparezca." :
-                  step === 2 && showReactionButton ? "¡Haga clic ahora en el botón verde!" :
-                  "Test completado. Equilibrio: " + (balanceTime / 1000).toFixed(1) + " segundos. Tiempo de reacción: " + reactionTime + " milisegundos."
+                  step === 0 ? t.functionalTest.voiceInstructions :
+                  step === 1 ? t.functionalTest.voiceBalance :
+                  step === 2 && !showReactionButton ? t.functionalTest.voiceReactionWait :
+                  step === 2 && showReactionButton ? t.functionalTest.voiceReactionNow :
+                  t.functionalTest.voiceComplete.replace('{balance}', (balanceTime / 1000).toFixed(1)).replace('{reaction}', reactionTime?.toString() || '0')
                 }
                 autoPlay={step === 0}
               />
@@ -105,7 +107,7 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
                 className="flex items-center gap-2 px-4 py-2 text-sm text-primary-600 border border-primary-300 rounded-full hover:bg-primary-50 transition-colors font-semibold"
               >
                 <ArrowLeft size={16} />
-                <span className="hidden sm:inline">Volver</span>
+                <span className="hidden sm:inline">{t.functionalTest.back}</span>
               </button>
             </div>
           </div>
@@ -122,19 +124,19 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
           {step === 0 && (
             <div className="animate-fade-in">
               <div className="bg-primary-50 border border-primary-200 rounded-xl p-6 mb-6">
-                <h3 className="text-xl font-bold mb-4 text-primary-700">📋 Instrucciones:</h3>
+                <h3 className="text-xl font-bold mb-4 text-primary-700">📋 {t.functionalTest.instructions}</h3>
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-3">
                     <span className="text-primary-500 font-bold">•</span>
-                    <span><strong>Test de equilibrio:</strong> Mantendrá presionado un botón el mayor tiempo posible.</span>
+                    <span><strong>{t.functionalTest.balanceTest}:</strong> {t.functionalTest.balanceDescription}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-primary-500 font-bold">•</span>
-                    <span><strong>Test de reacción:</strong> Debe hacer clic cuando aparezca un botón verde.</span>
+                    <span><strong>{t.functionalTest.reactionTest}:</strong> {t.functionalTest.reactionDescription}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-primary-500 font-bold">•</span>
-                    <span>⏱️ Tiempo estimado: <strong>2-3 minutos</strong></span>
+                    <span>⏱️ {t.functionalTest.estimatedTime}: <strong>2-3 {t.functionalTest.minutes}</strong></span>
                   </li>
                 </ul>
               </div>
@@ -144,7 +146,7 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
                   onClick={() => setStep(1)}
                   className="px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-full hover:bg-primary-600 shadow-soft transition-all"
                 >
-                  ▶️ Comenzar Test
+                  ▶️ {t.functionalTest.startTest}
                 </button>
               </div>
             </div>
@@ -153,9 +155,9 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
           {/* Step 1: Test de Equilibrio */}
           {step === 1 && (
             <div className="text-center animate-fade-in">
-              <h2 className="text-2xl font-bold mb-3 text-gray-800">🧘 Test de Equilibrio</h2>
+              <h2 className="text-2xl font-bold mb-3 text-gray-800">🧘 {t.functionalTest.balanceTest}</h2>
               <p className="text-lg mb-6 text-gray-600">
-                Mantenga presionado el botón abajo el mayor tiempo posible
+                {t.functionalTest.balanceInstructions}
               </p>
               
               <div className="bg-gray-50 rounded-xl p-8 mb-6">
@@ -174,12 +176,12 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
                       : 'bg-primary-500 hover:bg-primary-600 text-white'
                   }`}
                 >
-                  {isHoldingButton ? '✋ Mantenga presionado' : '👆 Presione aquí'}
+                  {isHoldingButton ? '✋ ' + t.functionalTest.holdButton : '👆 ' + t.functionalTest.holdButton}
                 </button>
               </div>
 
               <p className="text-sm italic text-gray-500">
-                * Suelte cuando no pueda mantener más
+                * {t.functionalTest.releaseButton}
               </p>
             </div>
           )}
@@ -187,11 +189,11 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
           {/* Step 2: Test de Reacción */}
           {step === 2 && (
             <div className="text-center animate-fade-in">
-              <h2 className="text-2xl font-bold mb-3 text-gray-800">⚡ Test de Tiempo de Reacción</h2>
+              <h2 className="text-2xl font-bold mb-3 text-gray-800">⚡ {t.functionalTest.reactionTest}</h2>
               <p className="text-lg mb-6 text-gray-600">
                 {!showReactionButton 
-                  ? 'Espere... el botón aparecerá pronto'
-                  : '¡Haga clic ahora!'}
+                  ? t.functionalTest.waitForGreen
+                  : t.functionalTest.clickNow}
               </p>
               
               <div className="bg-gray-50 rounded-xl p-8 flex items-center justify-center" style={{ minHeight: '400px' }}>
@@ -202,7 +204,7 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
                     onClick={handleReactionClick}
                     className="w-64 h-64 rounded-full bg-green-500 hover:bg-green-600 text-white text-xl font-semibold shadow-2xl animate-pulse"
                   >
-                    ✅ ¡CLIC AQUÍ!
+                    ✅ {t.functionalTest.clickNow}!
                   </button>
                 )}
               </div>
@@ -215,14 +217,14 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
               <div className="text-center mb-6">
                 <div className="text-7xl mb-4">✅</div>
                 <h2 className="text-3xl font-bold text-green-600 mb-6">
-                  ¡Test Completado!
+                  {t.functionalTest.testComplete}!
                 </h2>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 {/* Resultado de Equilibrio */}
                 <div className="bg-primary-50 border-2 border-primary-300 rounded-xl p-6 text-center">
-                  <h3 className="text-lg font-bold text-primary-700 mb-2">🧘 Equilibrio</h3>
+                  <h3 className="text-lg font-bold text-primary-700 mb-2">🧘 {t.functionalTest.balanceTest}</h3>
                   <p className="text-5xl font-bold text-primary-600 mb-2">
                     {(balanceTime / 1000).toFixed(1)}s
                   </p>
@@ -233,7 +235,7 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
 
                 {/* Resultado de Reacción */}
                 <div className="bg-green-50 border-2 border-green-300 rounded-xl p-6 text-center">
-                  <h3 className="text-lg font-bold text-green-700 mb-2">⚡ Reacción</h3>
+                  <h3 className="text-lg font-bold text-green-700 mb-2">⚡ {t.functionalTest.reactionTest}</h3>
                   <p className="text-5xl font-bold text-green-600 mb-2">
                     {reactionTime}ms
                   </p>
@@ -254,7 +256,7 @@ export const FunctionalTest: React.FC<{ onComplete: () => void }> = ({ onComplet
                   onClick={onComplete}
                   className="px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-full hover:bg-primary-600 shadow-soft transition-all"
                 >
-                  🏠 Volver al Menú
+                  🏠 {t.functionalTest.backToHome}
                 </button>
               </div>
             </div>

@@ -6,12 +6,14 @@ import { TestResult, UserProfile } from '../types';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ArrowLeft, Trash2, Download } from 'lucide-react';
 import jsPDF from 'jspdf';
+import { useLanguage } from '../LanguageContext';
 
 interface ResultsProps {
   onBack: () => void;
 }
 
 export function Results({ onBack }: ResultsProps) {
+  const { t } = useLanguage();
   const [results, setResults] = useState<TestResult[]>([]);
   const [selectedTest, setSelectedTest] = useState<'all' | 'functional' | 'cognitive' | 'mental' | 'lifeSpace'>('all');
 
@@ -30,10 +32,10 @@ export function Results({ onBack }: ResultsProps) {
 
   const getTestName = (type: TestResult['testType']) => {
     const names = {
-      functional: 'Test Funcional',
-      cognitive: 'Test Cognitivo',
-      mental: 'Estado Mental',
-      lifeSpace: 'Espacio de Vida'
+      functional: t.results.functionalTest,
+      cognitive: t.results.cognitiveTest,
+      mental: t.results.mentalState,
+      lifeSpace: t.results.lifeSpace
     };
     return names[type];
   };
@@ -49,10 +51,10 @@ export function Results({ onBack }: ResultsProps) {
   };
 
   const clearAllData = () => {
-    if (confirm('¿Estás seguro de que deseas eliminar todos los resultados? Esta acción no se puede deshacer.')) {
+    if (confirm(t.results.clearConfirm)) {
       storage.clearAll();
       setResults([]);
-      alert('Todos los datos han sido eliminados.');
+      alert(t.results.clearSuccess);
     }
   };
 
@@ -75,26 +77,26 @@ export function Results({ onBack }: ResultsProps) {
     
     doc.setFontSize(14);
     doc.setFont('helvetica', 'normal');
-    doc.text('Reporte de Evaluaciones de Salud', 105, 30, { align: 'center' });
+    doc.text(t.results.pdfTitle, 105, 30, { align: 'center' });
     
     // Información del paciente
     doc.setTextColor(60, 60, 60);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('Información del Paciente', 20, 55);
+    doc.text(t.results.patientInfo, 20, 55);
     
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
     if (profile) {
-      doc.text(`Nombre: ${profile.name}`, 20, 65);
-      doc.text(`Edad: ${profile.age} años`, 20, 72);
+      doc.text(`${t.results.name}: ${profile.name}`, 20, 65);
+      doc.text(`${t.results.age}: ${profile.age} ${t.results.years}`, 20, 72);
     }
-    doc.text(`Fecha del reporte: ${new Date().toLocaleDateString('es-MX', { 
+    doc.text(`${t.results.reportDate}: ${new Date().toLocaleDateString('es-MX', { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     })}`, 20, 79);
-    doc.text(`Total de evaluaciones: ${results.length}`, 20, 86);
+    doc.text(`${t.results.totalEvaluations}: ${results.length}`, 20, 86);
     
     // Línea separadora
     doc.setDrawColor(...accentColor);
@@ -105,7 +107,7 @@ export function Results({ onBack }: ResultsProps) {
     doc.setTextColor(...primaryColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text('Resumen de Evaluaciones', 20, 105);
+    doc.text(t.results.summary, 20, 105);
     
     let yPosition = 115;
     const testsGrouped = {

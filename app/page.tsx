@@ -10,10 +10,13 @@ import ChatAssistant from './components/ChatAssistant';
 import { storage, speak } from './utils';
 import { UserProfile } from './types';
 import { X } from 'lucide-react';
+import { useLanguage } from './LanguageContext';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 type Page = 'home' | 'functional' | 'cognitive' | 'mental' | 'lifeSpace' | 'results';
 
 export default function Home() {
+  const { t } = useLanguage();
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -82,14 +85,15 @@ export default function Home() {
               <span className="text-xl sm:text-2xl font-bold text-primary-500">CuidArte</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
+              <LanguageSwitcher />
               {profile ? (
                 <>
-                  <span className="text-sm text-gray-600 hidden md:block">Hola, <strong>{profile.name}</strong></span>
+                  <span className="text-sm text-gray-600 hidden md:block">{t.nav.greeting}, <strong>{profile.name}</strong></span>
                   <button
                     onClick={() => setCurrentPage('results')}
                     className="px-2 py-1.5 sm:px-4 sm:py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-xs sm:text-sm font-medium"
                   >
-                    <span className="hidden sm:inline">📊 Resultados</span>
+                    <span className="hidden sm:inline">📊 {t.nav.results}</span>
                     <span className="sm:hidden">📊</span>
                   </button>
                   <button
@@ -100,7 +104,7 @@ export default function Home() {
                     }}
                     className="px-2 py-1.5 sm:px-4 sm:py-2 border border-primary-500 text-primary-500 rounded-full hover:bg-primary-50 transition-colors text-xs sm:text-sm font-medium"
                   >
-                    <span className="hidden sm:inline">👤 Mi Perfil</span>
+                    <span className="hidden sm:inline">👤 {t.nav.profile}</span>
                     <span className="sm:hidden">👤</span>
                   </button>
                 </>
@@ -109,7 +113,7 @@ export default function Home() {
                   onClick={() => setShowProfileModal(true)}
                   className="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
                 >
-                  Iniciar Sesión
+                  {t.nav.login}
                 </button>
               )}
             </div>
@@ -134,12 +138,11 @@ export default function Home() {
                 {/* Texto */}
                 <div className="text-center md:text-left animate-fade-in">
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
-                    Estamos <strong className="font-bold text-gradient">comprometidos</strong> con<br />
-                    tu <strong className="font-bold text-gradient">bienestar.</strong>
+                    {t.hero.title1} <strong className="font-bold text-gradient">{t.hero.title2}</strong> {t.hero.title3}<br />
+                    {t.hero.title4} <strong className="font-bold text-gradient">{t.hero.title5}</strong>
                   </h1>
                   <p className="text-lg md:text-xl text-gray-600 mb-8">
-                    Continúa monitoreando tu salud con nuestras evaluaciones especializadas. 
-                    Cada test te ayuda a mantener tu bienestar.
+                    {t.hero.subtitle}
                   </p>
                   <button 
                     onClick={() => {
@@ -151,7 +154,7 @@ export default function Home() {
                     }}
                     className="inline-block px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-full hover:bg-primary-600 shadow-soft shadow-soft-hover transition-all"
                   >
-                    Realizar Evaluaciones
+                    {t.hero.cta}
                   </button>
                 </div>
 
@@ -178,35 +181,34 @@ export default function Home() {
                     <span className="text-2xl font-bold">CuidArte</span>
                   </div>
                   <p className="text-primary-100">
-                    Plataforma de evaluación y seguimiento longitudinal de la salud de adultos mayores 
-                    mediante tests clínicos validados.
+                    {t.footer.description}
                   </p>
                 </div>
 
                 {/* Evaluaciones */}
                 <div>
-                  <h5 className="font-bold text-lg mb-4">Evaluaciones</h5>
+                  <h5 className="font-bold text-lg mb-4">{t.footer.evaluations}</h5>
                   <ul className="space-y-2">
-                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Test Funcional</button></li>
-                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Test Cognitivo</button></li>
-                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Estado Mental</button></li>
-                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">Espacio de Vida</button></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">{t.footer.functionalTest}</button></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">{t.footer.cognitiveTest}</button></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">{t.footer.mentalState}</button></li>
+                    <li><button onClick={() => setShowTestsModal(true)} className="text-primary-100 hover:text-white transition-colors text-left">{t.footer.lifeSpace}</button></li>
                   </ul>
                 </div>
 
                 {/* Legal */}
                 <div>
-                  <h5 className="font-bold text-lg mb-4">Legal</h5>
+                  <h5 className="font-bold text-lg mb-4">{t.footer.legal}</h5>
                   <ul className="space-y-2">
-                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">Privacidad</a></li>
-                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">Términos</a></li>
-                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">Cookies</a></li>
+                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">{t.footer.privacy}</a></li>
+                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">{t.footer.terms}</a></li>
+                    <li><a href="#" className="text-primary-100 hover:text-white transition-colors">{t.footer.cookies}</a></li>
                   </ul>
                 </div>
               </div>
 
               <div className="mt-8 pt-8 border-t border-primary-400 text-center text-primary-100">
-                <p>&copy; {new Date().getFullYear()} CuidArte. Todos los derechos reservados.</p>
+                <p>&copy; {new Date().getFullYear()} CuidArte. {t.footer.copyright}</p>
               </div>
             </div>
           </footer>
@@ -220,7 +222,7 @@ export default function Home() {
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3">
                 <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-10 w-auto" />
-                <h2 className="text-2xl font-bold text-primary-600">Bienvenido</h2>
+                <h2 className="text-2xl font-bold text-primary-600">{t.profile.welcome}</h2>
               </div>
               {profile && (
                 <button 
@@ -234,21 +236,21 @@ export default function Home() {
             
             <p className="text-gray-600 mb-6">
               {profile 
-                ? 'Actualiza tus datos si lo deseas' 
-                : 'Para comenzar a usar CuidArte, necesitamos conocerte un poco'}
+                ? t.profile.welcomeBack
+                : t.profile.welcomeNew}
             </p>
             
             <form onSubmit={handleProfileSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  ¿Cuál es tu nombre? <span className="text-red-500">*</span>
+                  {t.profile.nameLabel} <span className="text-red-500">{t.profile.required}</span>
                 </label>
                 <input
                   type="text"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all text-gray-900"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ingresa tu nombre completo"
+                  placeholder={t.profile.namePlaceholder}
                   required
                   autoFocus
                 />
@@ -256,7 +258,7 @@ export default function Home() {
               
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  ¿Cuál es tu edad? <span className="text-red-500">*</span>
+                  {t.profile.ageLabel} <span className="text-red-500">{t.profile.required}</span>
                 </label>
                 <input
                   type="number"
@@ -265,7 +267,7 @@ export default function Home() {
                   onChange={(e) => setAge(e.target.value)}
                   min="50"
                   max="120"
-                  placeholder="Ingresa tu edad"
+                  placeholder={t.profile.agePlaceholder}
                   required
                 />
               </div>
@@ -275,7 +277,7 @@ export default function Home() {
                 disabled={!name || !age}
                 className="w-full px-6 py-4 bg-primary-500 text-white font-semibold rounded-full hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl"
               >
-                {profile ? 'Actualizar Perfil' : 'Comenzar mi evaluación'}
+                {profile ? t.profile.submitUpdate : t.profile.submitNew}
               </button>
             </form>
           </div>
@@ -289,7 +291,7 @@ export default function Home() {
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3">
                 <img src="/assets/img/logo-cuidarte.png" alt="CuidArte" className="h-10 w-auto" />
-                <h2 className="text-2xl md:text-3xl font-bold text-primary-600">Selecciona una Evaluación</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-primary-600">{t.testSelection.title}</h2>
               </div>
               <button 
                 onClick={() => setShowTestsModal(false)}
@@ -300,70 +302,70 @@ export default function Home() {
             </div>
             
             <p className="text-gray-600 mb-8 text-center">
-              Elige la evaluación que deseas realizar. Cada test está diseñado para medir diferentes aspectos de tu bienestar.
+              {t.hero.subtitle}
             </p>
             
             <div className="grid sm:grid-cols-2 gap-6">
               {/* Test Funcional */}
               <button
                 onClick={() => handleTestSelect('functional')}
-                onMouseEnter={() => speak('Test Funcional: Equilibrio y movilidad', 0.8)}
+                onMouseEnter={() => speak(t.testSelection.functional.title + ': ' + t.testSelection.functional.description, 0.8)}
                 className="bg-linear-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl text-center transition-all group"
               >
                 <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">📊</div>
-                <h3 className="text-2xl font-bold mb-2 text-gray-800">Test Funcional</h3>
-                <p className="text-gray-600 mb-3">Equilibrio y movilidad</p>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">{t.testSelection.functional.title}</h3>
+                <p className="text-gray-600 mb-3">{t.testSelection.functional.description}</p>
                 <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
-                  ⏱️ Duración: 2-3 minutos
+                  ⏱️ {t.testSelection.functional.duration}
                 </div>
               </button>
 
               {/* Test Cognitivo */}
               <button
                 onClick={() => handleTestSelect('cognitive')}
-                onMouseEnter={() => speak('Test Cognitivo: Memoria y atención', 0.8)}
+                onMouseEnter={() => speak(t.testSelection.cognitive.title + ': ' + t.testSelection.cognitive.description, 0.8)}
                 className="bg-linear-to-br from-purple-50 to-purple-100 p-8 rounded-2xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl text-center transition-all group"
               >
                 <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">🧠</div>
-                <h3 className="text-2xl font-bold mb-2 text-gray-800">Test Cognitivo</h3>
-                <p className="text-gray-600 mb-3">Memoria y atención</p>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">{t.testSelection.cognitive.title}</h3>
+                <p className="text-gray-600 mb-3">{t.testSelection.cognitive.description}</p>
                 <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
-                  ⏱️ Duración: 3-4 minutos
+                  ⏱️ {t.testSelection.cognitive.duration}
                 </div>
               </button>
 
               {/* Estado Mental */}
               <button
                 onClick={() => handleTestSelect('mental')}
-                onMouseEnter={() => speak('Test de Estado Mental: Bienestar emocional', 0.8)}
+                onMouseEnter={() => speak(t.testSelection.mental.title + ': ' + t.testSelection.mental.description, 0.8)}
                 className="bg-linear-to-br from-indigo-50 to-indigo-100 p-8 rounded-2xl border-2 border-indigo-200 hover:border-indigo-400 hover:shadow-xl text-center transition-all group"
               >
                 <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">💭</div>
-                <h3 className="text-2xl font-bold mb-2 text-gray-800">Estado Mental</h3>
-                <p className="text-gray-600 mb-3">Bienestar emocional</p>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">{t.testSelection.mental.title}</h3>
+                <p className="text-gray-600 mb-3">{t.testSelection.mental.description}</p>
                 <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
-                  ⏱️ Duración: 2 minutos
+                  ⏱️ {t.testSelection.mental.duration}
                 </div>
               </button>
 
               {/* Espacio de Vida */}
               <button
                 onClick={() => handleTestSelect('lifeSpace')}
-                onMouseEnter={() => speak('Test de Espacio de Vida: Movilidad y autonomía', 0.8)}
+                onMouseEnter={() => speak(t.testSelection.lifeSpace.title + ': ' + t.testSelection.lifeSpace.description, 0.8)}
                 className="bg-linear-to-br from-teal-50 to-teal-100 p-8 rounded-2xl border-2 border-teal-200 hover:border-teal-400 hover:shadow-xl text-center transition-all group"
               >
                 <div className="text-7xl mb-4 group-hover:scale-110 transition-transform">🌍</div>
-                <h3 className="text-2xl font-bold mb-2 text-gray-800">Espacio de Vida</h3>
-                <p className="text-gray-600 mb-3">Movilidad y autonomía</p>
+                <h3 className="text-2xl font-bold mb-2 text-gray-800">{t.testSelection.lifeSpace.title}</h3>
+                <p className="text-gray-600 mb-3">{t.testSelection.lifeSpace.description}</p>
                 <div className="text-sm text-gray-500 bg-white/60 rounded-lg px-3 py-2">
-                  ⏱️ Duración: 3-5 minutos
+                  ⏱️ {t.testSelection.lifeSpace.duration}
                 </div>
               </button>
             </div>
 
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
               <p className="text-sm text-blue-800 text-center">
-                💡 <strong>Consejo:</strong> Realiza los tests en un ambiente tranquilo y sin distracciones para obtener mejores resultados.
+                💡 <strong>{t.common.confirm}:</strong> {t.hero.subtitle}
               </p>
             </div>
           </div>
