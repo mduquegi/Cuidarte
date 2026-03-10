@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Send } from 'lucide-react';
 import Image from 'next/image';
+import { useLanguage } from '../LanguageContext';
 
 interface Message {
   id: string;
@@ -36,6 +37,8 @@ async function preguntarIA(pregunta: string): Promise<string> {
 }
 
 export default function ChatAssistant() {
+  const { language } = useLanguage();
+  const locale = language === 'es' ? 'es-MX' : 'en-US';
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -165,7 +168,7 @@ export default function ChatAssistant() {
                   <p className={`text-xs mt-1 ${
                     message.sender === 'user' ? 'text-primary-100' : 'text-gray-500'
                   }`}>
-                    {message.timestamp.toLocaleTimeString('es-MX', { 
+                    {message.timestamp.toLocaleTimeString(locale, { 
                       hour: '2-digit', 
                       minute: '2-digit' 
                     })}

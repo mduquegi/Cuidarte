@@ -13,9 +13,12 @@ interface ResultsProps {
 }
 
 export function Results({ onBack }: ResultsProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [results, setResults] = useState<TestResult[]>([]);
   const [selectedTest, setSelectedTest] = useState<'all' | 'functional' | 'cognitive' | 'mental' | 'lifeSpace'>('all');
+  
+  // Mapear idioma a locale para formateo de fechas
+  const locale = language === 'es' ? 'es-MX' : 'en-US';
 
   useEffect(() => {
     loadResults();
@@ -91,7 +94,7 @@ export function Results({ onBack }: ResultsProps) {
       doc.text(`${t.results.name}: ${profile.name}`, 20, 65);
       doc.text(`${t.results.age}: ${profile.age} ${t.results.years}`, 20, 72);
     }
-    doc.text(`${t.results.reportDate}: ${new Date().toLocaleDateString('es-MX', { 
+    doc.text(`${t.results.reportDate}: ${new Date().toLocaleDateString(locale, { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
@@ -118,10 +121,10 @@ export function Results({ onBack }: ResultsProps) {
     };
     
     const testNames = {
-      functional: 'Test Funcional',
-      cognitive: 'Test Cognitivo',
-      mental: 'Estado Mental',
-      lifeSpace: 'Espacio Vital'
+      functional: t.results.functionalTest,
+      cognitive: t.results.cognitiveTest,
+      mental: t.results.mentalState,
+      lifeSpace: t.results.lifeSpace
     };
     
     doc.setTextColor(60, 60, 60);
@@ -148,8 +151,8 @@ export function Results({ onBack }: ResultsProps) {
         doc.setTextColor(60, 60, 60);
         doc.text(testName, 26, yPosition);
         doc.setFont('helvetica', 'normal');
-        doc.text(`Realizados: ${tests.length}`, 110, yPosition);
-        doc.text(`Promedio: ${avgScore.toFixed(0)}%`, 160, yPosition);
+        doc.text(`${t.results.completed}: ${tests.length}`, 110, yPosition);
+        doc.text(`${t.results.average}: ${avgScore.toFixed(0)}%`, 160, yPosition);
         
         yPosition += 8;
       }
@@ -160,16 +163,16 @@ export function Results({ onBack }: ResultsProps) {
     doc.setTextColor(...primaryColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text('Historial Detallado', 20, yPosition);
+    doc.text(t.results.detailedHistory, 20, yPosition);
     
     yPosition += 10;
     doc.setFontSize(9);
     doc.setTextColor(255, 255, 255);
     doc.setFillColor(...primaryColor);
     doc.rect(20, yPosition - 5, 170, 8, 'F');
-    doc.text('Fecha', 22, yPosition);
-    doc.text('Test', 60, yPosition);
-    doc.text('Puntuación', 115, yPosition);
+    doc.text(t.results.date, 22, yPosition);
+    doc.text(t.results.testName, 60, yPosition);
+    doc.text(t.results.score, 115, yPosition);
     doc.text('%', 155, yPosition);
     
     yPosition += 8;
@@ -188,7 +191,7 @@ export function Results({ onBack }: ResultsProps) {
       doc.rect(20, yPosition - 5, 170, 7, 'F');
       
       doc.setFont('helvetica', 'normal');
-      doc.text(new Date(result.date).toLocaleDateString('es-MX'), 22, yPosition);
+      doc.text(new Date(result.date).toLocaleDateString(locale), 22, yPosition);
       doc.text(getTestName(result.testType), 60, yPosition);
       doc.text(`${result.score} / ${result.maxScore}`, 115, yPosition);
       
@@ -212,7 +215,7 @@ export function Results({ onBack }: ResultsProps) {
       doc.setTextColor(150, 150, 150);
       doc.setFont('helvetica', 'italic');
       doc.text(
-        `CuidArte - Plataforma de Evaluación de Salud | Página ${i} de ${pageCount}`,
+        `${t.results.pdfFooter} | ${t.results.page} ${i} ${t.results.of} ${pageCount}`,
         105,
         290,
         { align: 'center' }
@@ -226,7 +229,7 @@ export function Results({ onBack }: ResultsProps) {
   // Preparar datos para gráfico de progreso
   const chartData = filteredResults.map((result, index) => ({
     name: `Test ${index + 1}`,
-    fecha: new Date(result.date).toLocaleDateString('es-MX'),
+    fecha: new Date(result.date).toLocaleDateString(locale),
     porcentaje: getScorePercentage(result),
     puntuacion: result.score
   }));
@@ -240,13 +243,13 @@ export function Results({ onBack }: ResultsProps) {
             <button
               onClick={onBack}
               className="p-2 sm:p-3 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow"
-              aria-label="Volver"
+              aria-label={t.results.back}
             >
               <ArrowLeft className="text-primary-600" size={20} />
             </button>
             <div className="flex-1">
-              <h1 className="text-2xl sm:text-4xl font-bold text-primary-600">Mis Resultados</h1>
-              <p className="text-sm sm:text-base text-gray-600 mt-1">Historial de evaluaciones</p>
+              <h1 className="text-2xl sm:text-4xl font-bold text-primary-600">{t.results.title}</h1>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">{t.results.subtitle}</p>
             </div>
           </div>
           
@@ -258,8 +261,8 @@ export function Results({ onBack }: ResultsProps) {
               className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-accent-500 text-white rounded-lg hover:bg-accent-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
             >
               <Download size={18} />
-              <span className="hidden sm:inline">Exportar PDF</span>
-              <span className="sm:hidden">PDF</span>
+              <span className="hidden sm:inline">{t.results.exportPDF}</span>
+              <span className="sm:hidden">{t.results.exportPDFMobile}</span>
             </button>
             <button
               onClick={clearAllData}
@@ -267,8 +270,8 @@ export function Results({ onBack }: ResultsProps) {
               className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
             >
               <Trash2 size={18} />
-              <span className="hidden sm:inline">Limpiar Datos</span>
-              <span className="sm:hidden">Limpiar</span>
+              <span className="hidden sm:inline">{t.results.clearAll}</span>
+              <span className="sm:hidden">{t.results.clearAllMobile}</span>
             </button>
           </div>
         </div>
@@ -283,7 +286,7 @@ export function Results({ onBack }: ResultsProps) {
                 : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
-            Todos ({results.length})
+            {t.results.all} ({results.length})
           </button>
           <button
             onClick={() => setSelectedTest('functional')}
@@ -293,7 +296,7 @@ export function Results({ onBack }: ResultsProps) {
                 : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
-            <span className="hidden sm:inline">Funcional</span>
+            <span className="hidden sm:inline">{t.results.functionalShort}</span>
             <span className="sm:hidden">📊</span> ({results.filter(r => r.testType === 'functional').length})
           </button>
           <button
@@ -304,7 +307,7 @@ export function Results({ onBack }: ResultsProps) {
                 : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
-            <span className="hidden sm:inline">Cognitivo</span>
+            <span className="hidden sm:inline">{t.results.cognitiveShort}</span>
             <span className="sm:hidden">🧠</span> ({results.filter(r => r.testType === 'cognitive').length})
           </button>
           <button
@@ -315,7 +318,7 @@ export function Results({ onBack }: ResultsProps) {
                 : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
-            <span className="hidden sm:inline">Mental</span>
+            <span className="hidden sm:inline">{t.results.mentalShort}</span>
             <span className="sm:hidden">💭</span> ({results.filter(r => r.testType === 'mental').length})
           </button>
           <button
@@ -326,8 +329,8 @@ export function Results({ onBack }: ResultsProps) {
                 : 'bg-white text-gray-700 hover:bg-gray-100'
             }`}
           >
-            <span className="hidden sm:inline">Espacio de Vida</span>
-            <span className="sm:hidden">🌍 Espacio</span> ({results.filter(r => r.testType === 'lifeSpace').length})
+            <span className="hidden sm:inline">{t.results.lifeSpaceShort}</span>
+            <span className="sm:hidden">🌍</span> ({results.filter(r => r.testType === 'lifeSpace').length})
           </button>
         </div>
 
@@ -335,15 +338,15 @@ export function Results({ onBack }: ResultsProps) {
         {filteredResults.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-8 sm:p-12 text-center">
             <div className="text-5xl sm:text-6xl mb-4">📊</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-700 mb-2">No hay resultados aún</h3>
-            <p className="text-sm sm:text-base text-gray-500">Completa algunas evaluaciones para ver tu progreso aquí</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-700 mb-2">{t.results.noResults}</h3>
+            <p className="text-sm sm:text-base text-gray-500">{t.results.noResultsSubtitle}</p>
           </div>
         ) : (
           <>
             {/* Gráfico de progreso */}
             {chartData.length >= 2 && (
               <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Progreso en el Tiempo</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">{t.results.evolution}</h3>
                 <ResponsiveContainer width="100%" height={250}>
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -362,7 +365,7 @@ export function Results({ onBack }: ResultsProps) {
                       dataKey="porcentaje" 
                       stroke="#007bff" 
                       strokeWidth={3}
-                      name="Porcentaje (%)"
+                      name={t.results.percentageLabel}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -381,7 +384,7 @@ export function Results({ onBack }: ResultsProps) {
                       <div className="flex-1">
                         <h4 className="font-bold text-gray-900 text-base">{getTestName(result.testType)}</h4>
                         <p className="text-xs text-gray-500 mt-1">
-                          {new Date(result.date).toLocaleDateString('es-MX', {
+                          {new Date(result.date).toLocaleDateString(locale, {
                             year: 'numeric',
                             month: 'short',
                             day: 'numeric',
@@ -410,10 +413,10 @@ export function Results({ onBack }: ResultsProps) {
                 <table className="w-full">
                   <thead className="bg-primary-500 text-white">
                     <tr>
-                      <th className="px-6 py-4 text-left font-semibold">Fecha</th>
-                      <th className="px-6 py-4 text-left font-semibold">Test</th>
-                      <th className="px-6 py-4 text-left font-semibold">Puntuación</th>
-                      <th className="px-6 py-4 text-left font-semibold">Porcentaje</th>
+                      <th className="px-6 py-4 text-left font-semibold">{t.results.date}</th>
+                      <th className="px-6 py-4 text-left font-semibold">{t.results.testName}</th>
+                      <th className="px-6 py-4 text-left font-semibold">{t.results.score}</th>
+                      <th className="px-6 py-4 text-left font-semibold">{t.results.percentage}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -422,7 +425,7 @@ export function Results({ onBack }: ResultsProps) {
                       return (
                         <tr key={result.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                           <td className="px-6 py-4 text-gray-900">
-                            {new Date(result.date).toLocaleDateString('es-MX', {
+                            {new Date(result.date).toLocaleDateString(locale, {
                               year: 'numeric',
                               month: 'long',
                               day: 'numeric',
